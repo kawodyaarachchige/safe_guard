@@ -37,13 +37,13 @@ export default function SafetyAlerts() {
   const getAlertStyles = (type: string) => {
     switch (type) {
       case 'danger':
-        return 'bg-red-50 border-red-400 text-red-700';
+        return 'bg-red-50 border-teal-500 text-teal-800';
       case 'warning':
-        return 'bg-yellow-50 border-yellow-400 text-yellow-700';
+        return 'bg-yellow-50 border-teal-500 text-teal-800';
       case 'info':
-        return 'bg-blue-50 border-blue-400 text-blue-700';
+        return 'bg-blue-50 border-teal-500 text-teal-800';
       default:
-        return 'bg-gray-50 border-gray-400 text-gray-700';
+        return 'bg-gray-50 border-teal-500 text-teal-800';
     }
   };
 
@@ -61,36 +61,36 @@ export default function SafetyAlerts() {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6">
-      <div className="flex items-center space-x-2 mb-6">
-        <Bell className="h-6 w-6 text-purple-600" />
-        <h2 className="text-xl font-semibold">Safety Alerts</h2>
-      </div>
+      <div className="bg-white rounded-lg shadow-lg p-6">
+        <div className="flex items-center space-x-2 mb-6">
+          <Bell className="h-6 w-6 text-teal-500" />
+          <h2 className="text-xl font-semibold text-teal-800">Safety Alerts</h2>
+        </div>
 
-      <div className="space-y-4">
-        {alerts.map((alert) => (
-          <div
-            key={alert.id}
-            className={`p-4 border rounded-lg flex items-start space-x-3 ${getAlertStyles(
-              alert.type
-            )}`}
-          >
-            {getAlertIcon(alert.type)}
-            <div>
-              <p className="font-medium">{alert.message}</p>
-              <div className="mt-1 text-sm opacity-75">
-                <span>{alert.location}</span>
-                <span className="mx-2">•</span>
-                <span>{new Date(alert.timestamp).toLocaleTimeString()}</span>
+        <div className="space-y-4">
+          {alerts.map((alert) => (
+              <div
+                  key={alert.id}
+                  className={`p-4 border-l-4 rounded-lg flex items-start space-x-3 ${getAlertStyles(
+                      alert.type
+                  )}`}
+              >
+                {getAlertIcon(alert.type)}
+                <div>
+                  <p className="font-medium">{alert.message}</p>
+                  <div className="mt-1 text-sm opacity-75">
+                    <span>{alert.location}</span>
+                    <span className="mx-2">•</span>
+                    <span>{new Date(alert.timestamp).toLocaleTimeString()}</span>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
 
-      <button className="mt-4 w-full text-purple-600 hover:text-purple-700 text-sm font-medium">
-        View All Alerts
-      </button>
-    </div>
+        <button className="mt-4 w-full text-teal-500 hover:text-teal-700 text-sm font-medium">
+          View All Alerts
+        </button>
+      </div>
   );
 }
