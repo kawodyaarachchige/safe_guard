@@ -16,46 +16,74 @@ export default function Header() {
   };
 
   return (
-    <header className="bg-white shadow-md">
-      <div className="container mx-auto px-4 py-4">
-        <div className="flex items-center justify-between">
-          <Link to="/" className="flex items-center space-x-2">
-            <Shield className="h-8 w-8 text-purple-600" />
-            <span className="text-xl font-bold text-purple-800">SafeGuard</span>
-          </Link>
+      <header className="bg-gradient-to-r from-teal-500 to-blue-600 text-white shadow-md">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            {/* Logo and Branding */}
+            <Link to="/" className="flex items-center space-x-2">
+              <Shield className="h-8 w-8 text-yellow-400" />
+              <span className="text-xl font-extrabold tracking-wide">SafeGuard</span>
+            </Link>
 
-          <nav className="hidden md:flex items-center space-x-6">
-            <Link to="/" className="text-gray-600 hover:text-purple-600">Home</Link>
-            {user ? (
-              <>
-                <Link to="/dashboard" className="text-gray-600 hover:text-purple-600">Dashboard</Link>
-                <Link to="/location" className="text-gray-600 hover:text-purple-600">Location</Link>
-                <Link to="/report" className="text-gray-600 hover:text-purple-600">Report</Link>
-              </>
-            ) : (
-              <>
-                <Link to="/login" className="text-gray-600 hover:text-purple-600">Login</Link>
-                <Link 
-                  to="/signup" 
-                  className="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700"
+            {/* Navigation */}
+            <nav className="hidden md:flex items-center space-x-6">
+              <Link
+                  to="/"
+                  className="hover:text-yellow-400 transition-colors duration-200"
+              >
+                Home
+              </Link>
+              {user ? (
+                  <>
+                    <Link
+                        to="/dashboard"
+                        className="hover:text-yellow-400 transition-colors duration-200"
+                    >
+                      Dashboard
+                    </Link>
+                    <Link
+                        to="/location"
+                        className="hover:text-yellow-400 transition-colors duration-200"
+                    >
+                      Location
+                    </Link>
+                    <Link
+                        to="/report"
+                        className="hover:text-yellow-400 transition-colors duration-200"
+                    >
+                      Report
+                    </Link>
+                  </>
+              ) : (
+                  <>
+                    <Link
+                        to="/login"
+                        className="hover:text-yellow-400 transition-colors duration-200"
+                    >
+                      Login
+                    </Link>
+                    <Link
+                        to="/signup"
+                        className="bg-yellow-400 text-gray-900 px-4 py-2 rounded-md hover:bg-yellow-500 transition-all"
+                    >
+                      Sign Up
+                    </Link>
+                  </>
+              )}
+            </nav>
+
+            {/* Logout Button */}
+            {user && (
+                <button
+                    onClick={handleLogout}
+                    className="flex items-center space-x-2 hover:text-yellow-400 transition-colors duration-200"
                 >
-                  Sign Up
-                </Link>
-              </>
+                  <LogOut className="h-5 w-5" />
+                  <span>Logout</span>
+                </button>
             )}
-          </nav>
-
-          {user && (
-            <button
-              onClick={handleLogout}
-              className="flex items-center space-x-2 text-gray-600 hover:text-purple-600"
-            >
-              <LogOut className="h-5 w-5" />
-              <span>Logout</span>
-            </button>
-          )}
+          </div>
         </div>
-      </div>
-    </header>
+      </header>
   );
 }
