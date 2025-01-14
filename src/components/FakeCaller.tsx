@@ -41,7 +41,7 @@ export default function FakeCaller() {
                 <select
                     value={selectedContact}
                     onChange={(e) => setSelectedContact(e.target.value)}
-                    className="w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500"
+                    className="w-full rounded-md border border-teal-300 shadow-sm focus:border-teal-500 focus:ring-teal-500"
                 >
                   <option value="">Choose a contact</option>
                   {fakeContacts.map((contact, index) => (

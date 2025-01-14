@@ -37,11 +37,11 @@ export default function SafetyAlerts() {
   const getAlertStyles = (type: string) => {
     switch (type) {
       case 'danger':
-        return 'bg-red-50 border-teal-500 text-teal-800';
+        return 'bg-red-50 border-purple-500 text-teal-800';
       case 'warning':
-        return 'bg-yellow-50 border-teal-500 text-teal-800';
+        return 'bg-yellow-50 border-rose-500 text-teal-800';
       case 'info':
-        return 'bg-blue-50 border-teal-500 text-teal-800';
+        return 'bg-blue-50 border-blue-500 text-teal-800';
       default:
         return 'bg-gray-50 border-teal-500 text-teal-800';
     }
@@ -63,7 +63,7 @@ export default function SafetyAlerts() {
   return (
       <div className="bg-white rounded-lg shadow-lg p-6">
         <div className="flex items-center space-x-2 mb-6">
-          <Bell className="h-6 w-6 text-teal-500" />
+          <Bell className="h-6 w-6 text-purple-500" />
           <h2 className="text-xl font-semibold text-teal-800">Safety Alerts</h2>
         </div>
 
@@ -88,7 +88,7 @@ export default function SafetyAlerts() {
           ))}
         </div>
 
-        <button className="mt-4 w-full text-teal-500 hover:text-teal-700 text-sm font-medium">
+        <button className="mt-4 w-full text-black-500 hover:text-rose-700 text-sm font-medium">
           View All Alerts
         </button>
       </div>

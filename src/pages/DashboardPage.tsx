@@ -8,10 +8,12 @@ import SafeRouteMap from '../components/SafeRouteMap';
 import FakeCaller from '../components/FakeCaller';
 import IncidentNotifications from '../components/IncidentNotifications';
 
+
 export default function DashboardPage() {
     const { user } = useSelector((state: RootState) => state.user);
     const { incidents } = useSelector((state: RootState) => state.incidents);
     const { isTracking } = useSelector((state: RootState) => state.location);
+    const { contacts } = useSelector((state: RootState) => state.contacts);
 
     return (
         <div className="space-y-8">
@@ -25,41 +27,58 @@ export default function DashboardPage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div className="glass-effect p-6 rounded-2xl hover-lift">
-                    <Shield className="h-8 w-8 text-purple-600 mb-2" />
+                <div className="glass-effect p-6 rounded-2xl hover-lift border-t-4 border-pink-500">
+                    <Shield className="h-8 w-8 text-pink-600 mb-2"/>
                     <h3 className="font-semibold">Safety Status</h3>
                     <p className="text-sm text-gray-600">Active and Protected</p>
                 </div>
-                <div className="glass-effect p-6 rounded-2xl hover-lift">
-                    <MapPin className="h-8 w-8 text-pink-500 mb-2" />
+                <div className="glass-effect p-6 rounded-2xl hover-lift border-t-4 border-purple-500">
+                    <MapPin className="h-8 w-8 text-purple-500 mb-2"/>
                     <h3 className="font-semibold">Location Tracking</h3>
                     <p className="text-sm text-gray-600">
                         {isTracking ? 'Active' : 'Inactive'}
                     </p>
                 </div>
-                <div className="glass-effect p-6 rounded-2xl hover-lift">
-                    <Bell className="h-8 w-8 text-rose-500 mb-2" />
+                <div className="glass-effect p-6 rounded-2xl hover-lift border-t-4 border-rose-500">
+                    <Bell className="h-8 w-8 text-rose-500 mb-2"/>
                     <h3 className="font-semibold">Recent Incidents</h3>
                     <p className="text-sm text-gray-600">{incidents.length} Reports</p>
                 </div>
-                <div className="glass-effect p-6 rounded-2xl hover-lift">
-                    <Users className="h-8 w-8 text-purple-600 mb-2" />
+                <div className="glass-effect p-6 rounded-2xl hover-lift border-t-4 border-blue-500">
+                    <Users className="h-8 w-8 text-blue-600 mb-2"/>
                     <h3 className="font-semibold">Trusted Contacts</h3>
-                    <p className="text-sm text-gray-600">3 Active</p>
+                    <p className="text-sm text-gray-600">{contacts.length} Active</p>
                 </div>
+
+            </div>
+            <div className="glass-effect p-6 rounded-2xl border-t-4 border-blue-500">
+                <Users className="h-8 w-8 text-blue-600 mb-2"/>
+                <h3 className="font-semibold">Contacts</h3>
+                <ul className="mt-4 space-y-2">
+                    {contacts.length === 0 ? (
+                        <p className="text-gray-600">No contacts added yet.</p>
+                    ) : (
+                        contacts.map((contact) => (
+                            <li key={contact.id} className="text-sm">
+                                <strong>{contact.name}</strong> ({contact.relationship})<br/>
+                                <span className="text-gray-600">{contact.phone}</span> |{' '}
+                                <span className="text-gray-600">{contact.email}</span>
+                            </li>
+                        ))
+                    )}
+                </ul>
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <IncidentNotifications/>
+                <SafetyAlerts/>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <IncidentNotifications />
-                <SafetyAlerts />
+                <SafetyTips/>
+                <FakeCaller/>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <SafetyTips />
-                <FakeCaller />
-            </div>
-
-            <SafeRouteMap />
+            <SafeRouteMap/>
         </div>
     );
 }

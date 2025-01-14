@@ -11,6 +11,7 @@ import LocationPage from './pages/LocationPage';
 import DashboardPage from './pages/DashboardPage';
 import LoginForm from './components/LoginForm';
 import SignupForm from './components/SignupForm';
+import ContactManagerPage from "./pages/ContactManger.tsx";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
               <Route path="/report" element={<ReportPage />} />
               <Route path="/location" element={<LocationPage />} />
               <Route path="/dashboard" element={<DashboardPage />} />
+              <Route path="/contacts" element={<ContactManagerPage />} />
               <Route path="/login" element={<LoginForm />} />
               <Route path="/signup" element={<SignupForm />} />
             </Routes>
