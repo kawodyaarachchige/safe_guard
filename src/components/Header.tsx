@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { Shield, LogOut } from 'lucide-react';
+import {  LogOut, Heart } from 'lucide-react';
 import { RootState } from '../store/store';
 import { clearUser } from '../store/slices/userSlice';
 
@@ -16,55 +16,32 @@ export default function Header() {
   };
 
   return (
-      <header className="bg-gradient-to-r from-teal-500 to-blue-600 text-white shadow-md">
+      <header className="glass-effect sticky top-0 z-50 border-b border-purple-100">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            {/* Logo and Branding */}
             <Link to="/" className="flex items-center space-x-2">
-              <Shield className="h-8 w-8 text-yellow-400" />
-              <span className="text-xl font-extrabold tracking-wide">SafeGuard</span>
+              <div className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 p-2 rounded-lg">
+                <Heart className="h-8 w-8 text-pink-500" />
+              </div>
+              <span className="text-xl font-bold bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
+              SafeGuard
+            </span>
             </Link>
 
-            {/* Navigation */}
-            <nav className="hidden md:flex items-center space-x-6">
-              <Link
-                  to="/"
-                  className="hover:text-yellow-400 transition-colors duration-200"
-              >
-                Home
-              </Link>
+            <nav className="hidden md:flex items-center space-x-8">
+              <Link to="/" className="text-gray-600 hover:text-purple-600 transition-colors">Home</Link>
               {user ? (
                   <>
-                    <Link
-                        to="/dashboard"
-                        className="hover:text-yellow-400 transition-colors duration-200"
-                    >
-                      Dashboard
-                    </Link>
-                    <Link
-                        to="/location"
-                        className="hover:text-yellow-400 transition-colors duration-200"
-                    >
-                      Location
-                    </Link>
-                    <Link
-                        to="/report"
-                        className="hover:text-yellow-400 transition-colors duration-200"
-                    >
-                      Report
-                    </Link>
+                    <Link to="/dashboard" className="text-gray-600 hover:text-purple-600 transition-colors">Dashboard</Link>
+                    <Link to="/location" className="text-gray-600 hover:text-purple-600 transition-colors">Location</Link>
+                    <Link to="/report" className="text-gray-600 hover:text-purple-600 transition-colors">Report</Link>
                   </>
               ) : (
                   <>
-                    <Link
-                        to="/login"
-                        className="hover:text-yellow-400 transition-colors duration-200"
-                    >
-                      Login
-                    </Link>
+                    <Link to="/login" className="text-gray-600 hover:text-purple-600 transition-colors">Login</Link>
                     <Link
                         to="/signup"
-                        className="bg-yellow-400 text-gray-900 px-4 py-2 rounded-md hover:bg-yellow-500 transition-all"
+                        className="button-gradient text-white px-6 py-2 rounded-full hover:shadow-lg transition-all duration-300"
                     >
                       Sign Up
                     </Link>
@@ -72,11 +49,10 @@ export default function Header() {
               )}
             </nav>
 
-            {/* Logout Button */}
             {user && (
                 <button
                     onClick={handleLogout}
-                    className="flex items-center space-x-2 hover:text-yellow-400 transition-colors duration-200"
+                    className="flex items-center space-x-2 text-gray-600 hover:text-purple-600 transition-colors"
                 >
                   <LogOut className="h-5 w-5" />
                   <span>Logout</span>

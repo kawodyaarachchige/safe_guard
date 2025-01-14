@@ -1,3 +1,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    body {
+        @apply bg-gradient-to-br from-purple-50 to-pink-50;
+    }
+}
+
+.glass-effect {
+    @apply bg-white/80 backdrop-blur-lg;
+}
+
+.hover-lift {
+    @apply transition-transform duration-300 hover:-translate-y-1;
+}
+
+.button-gradient {
+    @apply bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600;
+}

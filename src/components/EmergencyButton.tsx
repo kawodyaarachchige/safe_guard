@@ -6,7 +6,6 @@ import { api } from '../services/api';
 
 export default function EmergencyButton() {
   const [isActive, setIsActive] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const { user } = useSelector((state: RootState) => state.user);
   const { currentLocation } = useSelector((state: RootState) => state.location);
 
@@ -16,14 +15,7 @@ export default function EmergencyButton() {
       return;
     }
 
-    if (isActive) return; // Prevent multiple clicks while alerting
-
-    const confirmAlert = window.confirm('Are you sure you want to send an emergency alert?');
-    if (!confirmAlert) return;
-
     setIsActive(true);
-    setError(null); // Reset error message
-
     try {
       await api.sendEmergencyAlert({
         userId: user.id,
@@ -31,43 +23,37 @@ export default function EmergencyButton() {
         timestamp: new Date().toISOString(),
       });
 
-      // Simulate calling emergency services
       setTimeout(() => {
         alert('Emergency services have been notified. Stay safe!');
         setIsActive(false);
       }, 2000);
     } catch (error) {
       console.error('Failed to send emergency alert:', error);
-      setError('Failed to send the emergency alert. Please try again later.');
       setIsActive(false);
     }
   };
 
   return (
-      <div className="fixed bottom-6 right-6">
+      <div className="fixed bottom-6 right-6 z-50">
         <button
             onClick={handleEmergency}
             disabled={isActive}
             className={`
-          flex items-center justify-center
+          relative group flex items-center justify-center
           w-16 h-16 rounded-full
-          shadow-lg transition-all duration-300
+          shadow-lg transition-all duration-500
           ${isActive
-                ? 'bg-red-600 animate-pulse'
-                : 'bg-red-500 hover:bg-red-600'
+                ? 'bg-red-600 animate-pulse scale-110'
+                : 'bg-gradient-to-r from-red-500 to-pink-500 hover:scale-110'
             }
         `}
         >
           <AlertCircle className="h-8 w-8 text-white" />
+          <div className="absolute -inset-1 bg-gradient-to-r from-red-500 to-pink-500 rounded-full blur opacity-30 group-hover:opacity-50 transition-opacity duration-500"></div>
         </button>
-        <span className="block text-center text-sm mt-2 font-medium text-gray-600">
+        <span className="block text-center text-sm mt-2 font-medium glass-effect px-4 py-1 rounded-full">
         {isActive ? 'Alerting...' : 'Emergency'}
       </span>
-        {error && (
-            <div className="mt-2 text-center text-sm text-red-600">
-              {error}
-            </div>
-        )}
       </div>
   );
 }
