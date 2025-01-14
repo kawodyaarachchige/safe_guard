@@ -34,26 +34,27 @@ export default function EmergencyButton() {
   };
 
   return (
-      <div className="fixed bottom-6 right-6 z-50">
+      <div className="fixed bottom-6 right-6 flex flex-row items-center space-x-2 z-50">
         <button
             onClick={handleEmergency}
             disabled={isActive}
             className={`
-          relative group flex items-center justify-center
-          w-16 h-16 rounded-full
-          shadow-lg transition-all duration-500
-          ${isActive
+        relative group flex items-center justify-center
+        rounded-full p-4 space-x-2 
+        shadow-lg transition-all duration-500
+        ${isActive
                 ? 'bg-red-600 animate-pulse scale-110'
                 : 'bg-gradient-to-r from-red-500 to-pink-500 hover:scale-110'
             }
-        `}
+      `}
         >
-          <AlertCircle className="h-8 w-8 text-white" />
+          <AlertCircle className="h-6 w-6 text-white" />
           <div className="absolute -inset-1 bg-gradient-to-r from-red-500 to-pink-500 rounded-full blur opacity-30 group-hover:opacity-50 transition-opacity duration-500"></div>
+        <span className="text-white font-bold text-sm">
+      {isActive ? 'Alerting...' : 'SOS'}
+    </span>
         </button>
-        <span className="block text-center text-sm mt-2 font-medium glass-effect px-4 py-1 rounded-full">
-        {isActive ? 'Alerting...' : 'Emergency'}
-      </span>
       </div>
   );
+
 }

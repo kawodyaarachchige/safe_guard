@@ -14,6 +14,7 @@ export default function DashboardPage() {
     const { incidents } = useSelector((state: RootState) => state.incidents);
     const { isTracking } = useSelector((state: RootState) => state.location);
     const { contacts } = useSelector((state: RootState) => state.contacts);
+    const favoriteContacts = contacts.filter(contact => contact.isFavorite);
 
     return (
         <div className="space-y-8">
@@ -51,21 +52,18 @@ export default function DashboardPage() {
                 </div>
 
             </div>
-            <div className="glass-effect p-6 rounded-2xl border-t-4 border-blue-500">
+            <div className="glass-effect p-6 rounded-2xl hover-lift border-t-4 border-blue-500">
                 <Users className="h-8 w-8 text-blue-600 mb-2"/>
-                <h3 className="font-semibold">Contacts</h3>
-                <ul className="mt-4 space-y-2">
-                    {contacts.length === 0 ? (
-                        <p className="text-gray-600">No contacts added yet.</p>
-                    ) : (
-                        contacts.map((contact) => (
-                            <li key={contact.id} className="text-sm">
-                                <strong>{contact.name}</strong> ({contact.relationship})<br/>
-                                <span className="text-gray-600">{contact.phone}</span> |{' '}
-                                <span className="text-gray-600">{contact.email}</span>
-                            </li>
-                        ))
-                    )}
+                <h3 className="font-semibold">Trusted Contacts</h3>
+                <p className="text-sm text-gray-600">
+                    {favoriteContacts.length} Favorites
+                </p>
+                <ul>
+                    {favoriteContacts.map(contact => (
+                        <li key={contact.id} className="mb-2">
+                            {contact.name} - {contact.phone}
+                        </li>
+                    ))}
                 </ul>
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

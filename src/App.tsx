@@ -12,6 +12,8 @@ import DashboardPage from './pages/DashboardPage';
 import LoginForm from './components/LoginForm';
 import SignupForm from './components/SignupForm';
 import ContactManagerPage from "./pages/ContactManger.tsx";
+import AIChat from "./pages/AIChat.tsx";
+import PanicMode from "./components/PanicMode.tsx";
 
 function App() {
   return (
@@ -28,9 +30,11 @@ function App() {
               <Route path="/contacts" element={<ContactManagerPage />} />
               <Route path="/login" element={<LoginForm />} />
               <Route path="/signup" element={<SignupForm />} />
+              <Route path="/aichat" element={<AIChat />} />
             </Routes>
           </main>
           <EmergencyButton />
+          <PanicMode />
           <Footer />
         </div>
       </Router>

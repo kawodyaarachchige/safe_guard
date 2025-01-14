@@ -8,6 +8,7 @@ export interface Contact {
     relationship: string;
     isEmergencyContact: boolean;
     lastUpdated: string;
+    isFavorite: boolean;
 }
 
 interface ContactState {
@@ -60,6 +61,7 @@ const contactSlice = createSlice({
         setLoading: (state, action: PayloadAction<boolean>) => {
             state.loading = action.payload;
         },
+
 
         setError: (state, action: PayloadAction<string | null>) => {
             state.error = action.payload;

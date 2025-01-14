@@ -15,6 +15,7 @@ export default function ContactManager() {
         email: '',
         relationship: '',
         isEmergencyContact: false,
+        isFavorite: false,
     });
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -24,6 +25,7 @@ export default function ContactManager() {
             id: selectedContact?.id || Date.now().toString(),
             ...formData,
             lastUpdated: new Date().toISOString(),
+            isFavorite: formData.isFavorite,
         };
 
         if (selectedContact) {
@@ -43,6 +45,7 @@ export default function ContactManager() {
             email: contact.email,
             relationship: contact.relationship,
             isEmergencyContact: contact.isEmergencyContact,
+            isFavorite: contact.isFavorite, // Ensure this is loaded as well
         });
         setIsEditing(true);
     };
@@ -61,6 +64,7 @@ export default function ContactManager() {
             email: '',
             relationship: '',
             isEmergencyContact: false,
+            isFavorite: false, // Reset the isFavorite flag
         });
         setIsEditing(false);
     };
@@ -140,6 +144,19 @@ export default function ContactManager() {
                         </label>
                     </div>
 
+                    <div className="flex items-center">
+                        <input
+                            type="checkbox"
+                            id="isFavorite"
+                            checked={formData.isFavorite}
+                            onChange={(e) => setFormData({ ...formData, isFavorite: e.target.checked })}
+                            className="rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+                        />
+                        <label htmlFor="isFavorite" className="ml-2 text-sm text-gray-700">
+                            Mark as Favorite
+                        </label>
+                    </div>
+
                     <div className="flex justify-end space-x-4">
                         <button
                             type="button"
@@ -171,6 +188,9 @@ export default function ContactManager() {
                                     {contact.name}
                                     {contact.isEmergencyContact && (
                                         <Heart className="h-4 w-4 text-pink-500 ml-2" />
+                                    )}
+                                    {contact.isFavorite && (
+                                        <Star className="h-4 w-4 text-yellow-500 ml-2" /> // Show star for favorite contacts
                                     )}
                                 </h3>
                                 <p className="text-sm text-gray-600">{contact.relationship}</p>

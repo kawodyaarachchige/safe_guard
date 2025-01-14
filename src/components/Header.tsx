@@ -35,7 +35,8 @@ export default function Header() {
                     <Link to="/dashboard" className="text-gray-600 hover:text-purple-600 transition-colors">Dashboard</Link>
                     <Link to="/location" className="text-gray-600 hover:text-purple-600 transition-colors">Location</Link>
                     <Link to="/report" className="text-gray-600 hover:text-purple-600 transition-colors">Report</Link>
-                    <Link to="/contacts" className="text-gray-700 hover:text-purple-500">Contact Manager</Link>
+                    <Link to="/contacts" className="text-gray-700 hover:text-purple-500">Phone Book</Link>
+                    <Link to="/aichat" className="text-gray-600 hover:text-purple-600 transition-colors">AI Chat</Link>
                   </>
               ) : (
                   <>
