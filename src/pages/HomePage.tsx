@@ -84,17 +84,17 @@ export default function HomePage() {
               {[
                 {
                   quote: "This app gives me confidence to travel alone.",
-                  author: "Sarah M.",
+                  author: "Ashi Jayathilaka",
                   role: "Student"
                 },
                 {
                   quote: "The emergency features are quick and reliable.",
-                  author: "Emily R.",
+                  author: "Tharu Arachchige",
                   role: "Professional"
                 },
                 {
                   quote: "A must-have for every woman's safety.",
-                  author: "Lisa K.",
+                  author: "Janu Disanayke",
                   role: "Entrepreneur"
                 }
               ].map((testimonial, index) => (

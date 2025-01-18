@@ -49,7 +49,7 @@ export default function Footer() {
                 </li>
                 <li className="flex items-center space-x-2">
                   <MapPin className="h-4 w-4" />
-                  <span>123 Safety Street, Secure City</span>
+                  <span>123 Main Street, SriLanka</span>
                 </li>
               </ul>
             </div>

@@ -14,6 +14,7 @@ import SignupForm from './components/SignupForm';
 import ContactManagerPage from "./pages/ContactManger.tsx";
 import AIChat from "./pages/AIChat.tsx";
 import PanicMode from "./components/PanicMode.tsx";
+import AboutPage from "./pages/About.tsx";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <main className="flex-grow container mx-auto px-4 py-8">
             <Routes>
               <Route path="/" element={<HomePage />} />
+              <Route path="/about" element={<AboutPage />} />
               <Route path="/report" element={<ReportPage />} />
               <Route path="/location" element={<LocationPage />} />
               <Route path="/dashboard" element={<DashboardPage />} />

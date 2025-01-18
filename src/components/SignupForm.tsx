@@ -90,7 +90,7 @@ export default function SignupForm() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full flex items-center justify-center space-x-2 bg-purple-600 text-white py-2 px-4 rounded-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 disabled:opacity-50"
+          className="w-full flex items-center justify-center space-x-2 button-gradient text-white py-2 px-4 rounded-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 disabled:opacity-50"
         >
           <UserPlus className="h-5 w-5" />
           <span>{loading ? 'Creating Account...' : 'Sign Up'}</span>

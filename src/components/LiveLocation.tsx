@@ -115,14 +115,39 @@ export default function LiveLocation() {
             onClick={() => {
               if (currentLocation) {
                 const locationURL = `https://www.google.com/maps?q=${currentLocation.latitude},${currentLocation.longitude}`;
-                navigator.clipboard.writeText(locationURL);
-                alert('Location URL copied to clipboard!');
+                const message = `Check out this location: ${locationURL}`;
+
+                const contactMethod = prompt('Enter "email" to share via email or "sms" for a phone number:');
+
+                if (contactMethod?.trim().toLowerCase() === 'email') {
+                  const recipientEmail = prompt('Enter the recipient email address:');
+                  if (recipientEmail) {
+                    const mailtoLink = `mailto:${recipientEmail}?subject=Location Sharing&body=${encodeURIComponent(message)}`;
+                    window.location.href = mailtoLink;
+                  } else {
+                    alert('Email address is required to share via email.');
+                  }
+                } else if (contactMethod?.trim().toLowerCase() === 'sms') {
+                  const recipientPhone = prompt('Enter the recipient phone number:');
+                  if (recipientPhone) {
+                    const smsLink = `sms:${recipientPhone}?body=${encodeURIComponent(message)}`;
+                    // Only works on mobile devices with SMS apps
+                    window.location.href = smsLink;
+                  } else {
+                    alert('Phone number is required to share via SMS.');
+                  }
+                } else {
+                  alert('Invalid option. Please enter "email" or "sms".');
+                }
+              } else {
+                alert('Current location is unavailable. Start tracking first.');
               }
             }}
-            className="mt-4 px-4 py-2 bg-blue-100 text-blue-600 rounded-md hover:bg-blue-200"
+            className="mt-4 px-4 py-2 bg-green-100 text-green-600 rounded-md hover:bg-green-200"
         >
           Share Location
         </button>
+
 
       </div>
   );
