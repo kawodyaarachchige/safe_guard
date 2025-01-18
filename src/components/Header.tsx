@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import {  LogOut, Heart } from 'lucide-react';
+import { LogOut, Heart } from 'lucide-react';
 import { RootState } from '../store/store';
 import { clearUser } from '../store/slices/userSlice';
 

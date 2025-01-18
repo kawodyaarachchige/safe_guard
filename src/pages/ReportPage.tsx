@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { AlertTriangle } from 'lucide-react';
-import { addIncident } from '../store/slices/incidentSlice';
+import { addIncident, setLoading, setError, clearIncidents } from '../store/slices/incidentSlice';
+import { RootState } from '../store';
 
 export default function ReportPage() {
   const dispatch = useDispatch();
@@ -12,15 +13,16 @@ export default function ReportPage() {
     description: '',
     location: '',
   });
-  const [loading, setLoading] = useState(false);
+
+  const { loading, error } = useSelector((state: RootState) => state.incidents);
   const [success, setSuccess] = useState(false);
+  const [isModalOpen, setModalOpen] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    dispatch(setLoading(true));
 
     try {
-      // Create the incident object with all required fields
       const incident = {
         id: Date.now().toString(),
         type: formData.type,
@@ -30,21 +32,24 @@ export default function ReportPage() {
         status: 'pending' as const,
       };
 
-      // Dispatch the action to add the incident to the store
       dispatch(addIncident(incident));
-
       setSuccess(true);
       setFormData({ type: '', description: '', location: '' });
 
-      // Navigate to dashboard after a short delay
       setTimeout(() => {
         navigate('/dashboard');
       }, 1500);
     } catch (error) {
       console.error('Failed to report incident:', error);
+      dispatch(setError('Failed to report incident.'));
     } finally {
-      setLoading(false);
+      dispatch(setLoading(false));
     }
+  };
+
+  const confirmClearIncidents = () => {
+    setModalOpen(false); // Close the modal
+    dispatch(clearIncidents());
   };
 
   return (
@@ -60,11 +65,15 @@ export default function ReportPage() {
             </div>
         )}
 
+        {error && (
+            <div className="bg-red-100 text-red-700 p-4 rounded-xl mb-6">
+              {error}
+            </div>
+        )}
+
         <form onSubmit={handleSubmit} className="glass-effect rounded-xl p-6 space-y-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Incident Type
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Incident Type</label>
             <select
                 value={formData.type}
                 onChange={(e) => setFormData({ ...formData, type: e.target.value })}
@@ -80,9 +89,7 @@ export default function ReportPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Description
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
             <textarea
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -94,9 +101,7 @@ export default function ReportPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Location
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Location</label>
             <input
                 type="text"
                 value={formData.location}
@@ -116,6 +121,39 @@ export default function ReportPage() {
             <span>{loading ? 'Submitting...' : 'Report Incident'}</span>
           </button>
         </form>
+
+        <button
+            onClick={() => setModalOpen(true)}
+            className="mt-6 text-red-500 underline"
+        >
+          Clear All Incidents
+        </button>
+
+        {/* Confirmation Modal */}
+        {isModalOpen && (
+            <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
+              <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
+                <h2 className="text-lg font-bold text-gray-800">Confirm Action</h2>
+                <p className="text-sm text-gray-600 mt-2">
+                  Are you sure you want to clear all incidents? This action cannot be undone.
+                </p>
+                <div className="flex items-center justify-end space-x-4 mt-4">
+                  <button
+                      onClick={confirmClearIncidents}
+                      className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"
+                  >
+                    Clear All
+                  </button>
+                  <button
+                      onClick={() => setModalOpen(false)}
+                      className="bg-gray-300 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-400 transition"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+        )}
       </div>
   );
 }
