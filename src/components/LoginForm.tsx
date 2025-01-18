@@ -61,13 +61,20 @@ export default function LoginForm() {
           />
         </div>
         <button
-          type="submit"
-          disabled={loading}
-          className="w-full flex items-center justify-center space-x-2 button-gradient   text-white py-2 px-4 rounded-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 disabled:opacity-50"
+            className="w-full flex items-center justify-center space-x-2 button-gradient text-white py-2 px-4 rounded-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 disabled:opacity-50"
         >
-          <LogIn className="h-5 w-5" />
+          <svg
+              className="h-5 w-5"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7"/>
+          </svg>
           <span>{loading ? 'Logging in...' : 'Login'}</span>
         </button>
+
       </form>
     </div>
   );

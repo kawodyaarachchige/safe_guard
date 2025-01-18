@@ -1,15 +1,48 @@
-import React, { useState } from 'react';
-import { Map, Navigation2 } from 'lucide-react';
+import React, { useState } from "react";
+import { GoogleMap, useLoadScript, Marker, DirectionsRenderer } from "@react-google-maps/api";
+import { Map, Navigation2 } from "lucide-react";
 
-export default function SafeRouteMap() {
-  const [startPoint, setStartPoint] = useState('');
-  const [endPoint, setEndPoint] = useState('');
 
-  const handleFindRoute = (e: React.FormEvent) => {
+
+const mapContainerStyle = {
+  width: "100%",
+  height: "400px",
+};
+
+const center = {
+  lat: 37.7749, // Default center (e.g., San Francisco)
+  lng: -122.4194,
+};
+
+const SafeRouteMap: React.FC = () => {
+  const { isLoaded, loadError } = useLoadScript({
+    googleMapsApiKey:import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
+  });
+
+  const [startPoint, setStartPoint] = useState("");
+  const [endPoint, setEndPoint] = useState("");
+  const [directions, setDirections] = useState<any>(null);
+
+  const handleFindRoute = async (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app, this would integrate with a maps API
-    alert('This feature would show the safest route between two points, avoiding high-risk areas.');
+
+    if (!startPoint || !endPoint) {
+      alert("Please enter both start and destination points.");
+      return;
+    }
+
+    const directionsService = new google.maps.DirectionsService();
+    const results = await directionsService.route({
+      origin: startPoint,
+      destination: endPoint,
+      travelMode: google.maps.TravelMode.DRIVING,
+    });
+
+    setDirections(results);
   };
+
+  if (loadError) return <div>Error loading maps</div>;
+  if (!isLoaded) return <div>Loading Maps...</div>;
 
   return (
       <div className="bg-white rounded-lg shadow-lg p-6">
@@ -50,17 +83,17 @@ export default function SafeRouteMap() {
           </button>
         </form>
 
-        <div className="mt-4 p-4 bg-gray-50 rounded-md">
-          <p className="text-sm text-gray-600">
-            Safe routes are calculated based on:
-            <ul className="list-disc ml-5 mt-2 space-y-1">
-              <li>Well-lit streets</li>
-              <li>High-traffic areas</li>
-              <li>Police station proximity</li>
-              <li>Recent incident reports</li>
-            </ul>
-          </p>
+        <div className="mt-6">
+          <GoogleMap
+              mapContainerStyle={mapContainerStyle}
+              center={center}
+              zoom={10}
+          >
+            {directions && <DirectionsRenderer directions={directions} />}
+          </GoogleMap>
         </div>
       </div>
   );
-}
+};
+
+export default SafeRouteMap;

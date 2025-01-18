@@ -10,8 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@react-google-maps/api": "^2.20.5",
     "@reduxjs/toolkit": "^2.2.1",
     "axios": "^1.7.9",
+    "dotenv": "^16.4.7",
     "lucide-react": "^0.344.0",
     "openai": "^4.28.0",
     "react": "^18.3.1",

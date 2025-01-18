@@ -16,7 +16,7 @@ export default function LiveLocation() {
     try {
       const response = await axios.get('https://api.opencagedata.com/geocode/v1/json', {
         params: {
-          key: '0d9810216989430297e8b4ada351ea28', // API key
+          key: import.meta.env.VITE_GEOCODE_API_KEY,
           q: `${latitude},${longitude}`,
         },
       });
@@ -131,7 +131,6 @@ export default function LiveLocation() {
                   const recipientPhone = prompt('Enter the recipient phone number:');
                   if (recipientPhone) {
                     const smsLink = `sms:${recipientPhone}?body=${encodeURIComponent(message)}`;
-                    // Only works on mobile devices with SMS apps
                     window.location.href = smsLink;
                   } else {
                     alert('Phone number is required to share via SMS.');
