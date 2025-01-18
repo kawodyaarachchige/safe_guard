@@ -1,50 +1,58 @@
 import React from 'react';
-import { Lightbulb, ExternalLink } from 'lucide-react';
+import { Lightbulb, ExternalLink, Phone, MapPin, Shield } from 'lucide-react';
 
 export default function SafetyTips() {
   const tips = [
     {
       title: "Stay Alert in Public",
-      description: "Be aware of your surroundings. Avoid using headphones or phone while walking alone.",
+      description: "Be aware of your surroundings. Avoid using headphones or phone while walking alone. Keep your phone easily accessible.",
       link: "#",
+      icon: <Shield className="h-6 w-6 text-yellow-500" />
     },
     {
       title: "Share Your Location",
-      description: "Always share your live location with trusted contacts when traveling.",
+      description: "Always share your live location with trusted contacts when traveling. Use location-sharing apps like WhatsApp or Google Maps.",
       link: "#",
+      icon: <MapPin className="h-6 w-6 text-green-500" />
     },
     {
       title: "Emergency Numbers",
-      description: "Save important emergency numbers on speed dial.",
-      link: "#",
+      description: "Save important emergency numbers like Police, Ambulance, Fire Department, and your local contacts on speed dial.",
+      link: "tel:+94728893383",
+      icon: <Phone className="h-6 w-6 text-red-500" />
     },
+
     {
-      title: "Safe Routes",
-      description: "Plan your route in advance and stick to well-lit, populated areas.",
+      title: "Cybersecurity Awareness",
+      description: "Avoid sharing personal information online. Use strong passwords and be cautious with public Wi-Fi.",
       link: "#",
+      icon: <Shield className="h-6 w-6 text-blue-500" />
     }
   ];
 
   return (
-      <div className="bg-white rounded-lg shadow-lg p-6">
+      <div className="bg-white rounded-2xl hover-lift shadow-lg p-6">
         <div className="flex items-center space-x-2 mb-6">
-          <Lightbulb className="h-6 w-6 text-teal-500" />
+          <Lightbulb className="h-6 w-6 text-purple-500" />
           <h2 className="text-xl font-semibold text-teal-800">Safety Tips</h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {tips.map((tip, index) => (
               <div
                   key={index}
-                  className="p-4 border-l-4 rounded-lg hover:border-teal-300 transition-colors"
+                  className="p-4 border-l-4 rounded-lg hover:border-pink-300 transition-colors"
               >
-                <h3 className="font-semibold text-lg mb-2 text-teal-800">{tip.title}</h3>
+                <div className="flex items-center space-x-2 mb-2">
+                  {tip.icon}
+                  <h3 className="font-semibold text-lg text-teal-800">{tip.title}</h3>
+                </div>
                 <p className="text-gray-600 mb-2">{tip.description}</p>
                 <a
                     href={tip.link}
-                    className="text-teal-500 hover:text-teal-700 flex items-center space-x-1"
+                    className="text-purple-500 hover:text-purple-700 flex items-center space-x-1"
                 >
                   <span>Learn more</span>
-                  <ExternalLink className="h-4 w-4 text-teal-500" />
+                  <ExternalLink className="h-4 w-4 text-purple-500" />
                 </a>
               </div>
           ))}

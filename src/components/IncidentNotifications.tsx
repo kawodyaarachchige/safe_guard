@@ -26,7 +26,7 @@ export default function IncidentNotifications() {
 
     if (incidents.length === 0) {
         return (
-            <div className="glass-effect rounded-2xl p-6">
+            <div className="bg-white  hover-lift rounded-2xl shadow-lg p-6">
                 <div className="flex items-center space-x-2 mb-6">
                     <AlertTriangle className="h-6 w-6 text-purple-600" />
                     <h2 className="text-xl font-semibold">Recent Incidents</h2>
@@ -37,7 +37,7 @@ export default function IncidentNotifications() {
     }
 
     return (
-        <div className="glass-effect rounded-2xl p-6">
+        <div className="bg-white rounded-2xl  shadow-lg  hover-lift p-6">
             <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center space-x-2">
                     <AlertTriangle className="h-6 w-6 text-purple-600" />

@@ -10,8 +10,8 @@ const mapContainerStyle = {
 };
 
 const center = {
-  lat: 37.7749, // Default center (e.g., San Francisco)
-  lng: -122.4194,
+  lat: 6.9271,
+  lng: 79.8612
 };
 
 const SafeRouteMap: React.FC = () => {
@@ -45,10 +45,10 @@ const SafeRouteMap: React.FC = () => {
   if (!isLoaded) return <div>Loading Maps...</div>;
 
   return (
-      <div className="bg-white rounded-lg shadow-lg p-6">
+      <div className="bg-white rounded-2xl shadow-lg p-6">
         <div className="flex items-center space-x-2 mb-6">
-          <Map className="h-6 w-6 text-teal-500" />
-          <h2 className="text-xl font-semibold text-teal-800">Safe Route Planner</h2>
+          <Map className="h-6 w-6 text-purple-500" />
+          <h2 className="text-xl font-semibold text-black-800">Safe Route Planner</h2>
         </div>
 
         <form onSubmit={handleFindRoute} className="space-y-4">
@@ -76,7 +76,7 @@ const SafeRouteMap: React.FC = () => {
 
           <button
               type="submit"
-              className="w-full flex items-center justify-center space-x-2 bg-teal-500 text-white py-2 px-4 rounded-md hover:bg-teal-600"
+              className="w-full flex items-center justify-center space-x-2 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
           >
             <Navigation2 className="h-5 w-5" />
             <span>Find Safe Route</span>

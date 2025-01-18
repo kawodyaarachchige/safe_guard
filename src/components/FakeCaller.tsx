@@ -47,12 +47,12 @@ export default function FakeCaller() {
   };
 
   return (
-      <div className="bg-white rounded-lg shadow-lg p-6">
+      <div className="bg-white rounded-2xl hover-lift shadow-lg p-6">
         <audio ref={ringtoneRef} src="/ringtone.mp3" preload="auto" />
 
         <div className="flex items-center space-x-2 mb-6">
-          <Phone className="h-6 w-6 text-teal-500" />
-          <h2 className="text-xl font-semibold text-teal-800">Fake Incoming Call</h2>
+          <Phone className="h-6 w-6 text-purple-500" />
+          <h2 className="text-xl font-semibold text-black-800">Fake Incoming Call</h2>
         </div>
 
         {!isActive ? (
@@ -65,7 +65,7 @@ export default function FakeCaller() {
                 <select
                     value={selectedContact}
                     onChange={(e) => setSelectedContact(e.target.value)}
-                    className="w-full rounded-md border border-teal-300 shadow-sm focus:border-teal-500 focus:ring-teal-500"
+                    className="w-full rounded-md border border-gray-300 shadow-sm focus:border-gray-500 focus:ring-teal-500"
                 >
                   <option value="">Choose a contact</option>
                   {fakeContacts.map((contact, index) => (
@@ -86,14 +86,14 @@ export default function FakeCaller() {
                     placeholder="Name"
                     value={customContact.name}
                     onChange={(e) => setCustomContact({ ...customContact, name: e.target.value })}
-                    className="w-full rounded-md border border-teal-300 shadow-sm focus:border-teal-500 focus:ring-teal-500"
+                    className="w-full rounded-md border border-gray-300 shadow-sm focus:border-gray-500 focus:ring-teal-500"
                 />
                 <input
                     type="text"
                     placeholder="Phone Number"
                     value={customContact.number}
                     onChange={(e) => setCustomContact({ ...customContact, number: e.target.value })}
-                    className="w-full rounded-md border border-teal-300 shadow-sm focus:border-teal-500 focus:ring-teal-500"
+                    className="w-full rounded-md border border-gray-300 shadow-sm focus:border-gray-500 focus:ring-teal-500"
                 />
               </div>
 
@@ -107,14 +107,14 @@ export default function FakeCaller() {
                     min="0"
                     value={delay}
                     onChange={(e) => setDelay(e.target.value)}
-                    className="w-full rounded-md border border-teal-300 shadow-sm focus:border-teal-500 focus:ring-teal-500"
+                    className="w-full rounded-md border border-gray-300 shadow-sm focus:border-gray-500 focus:ring-teal-500"
                 />
               </div>
 
               {/* Trigger Call Button */}
               <button
                   onClick={handleStartCall}
-                  className="w-full flex items-center justify-center space-x-2 bg-teal-500 text-white py-2 px-4 rounded-md hover:bg-teal-600"
+                  className="w-full flex items-center justify-center space-x-2 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
               >
                 <Phone className="h-5 w-5" />
                 <span>Trigger Fake Call</span>
@@ -127,7 +127,7 @@ export default function FakeCaller() {
         ) : (
             <div className="text-center space-y-4">
               <div className="animate-pulse">
-                <Volume2 className="h-12 w-12 text-teal-500 mx-auto" />
+                <Volume2 className="h-12 w-12 text-green-500 mx-auto" />
                 <p className="text-lg font-medium mt-2">
                   Incoming call from{' '}
                   {selectedContact || `${customContact.name} (${customContact.number})`}...

@@ -15,9 +15,10 @@
     "axios": "^1.7.9",
     "dotenv": "^16.4.7",
     "lucide-react": "^0.344.0",
-    "openai": "^4.28.0",
+    "openai": "^4.79.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-leaflet": "^4.2.1",
     "react-redux": "^9.1.0",
     "react-router-dom": "^6.22.2"
   },

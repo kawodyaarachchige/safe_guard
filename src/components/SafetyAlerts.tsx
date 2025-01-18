@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Bell, AlertTriangle, Info } from 'lucide-react';
 
 interface Alert {
@@ -10,7 +10,7 @@ interface Alert {
 }
 
 export default function SafetyAlerts() {
-  const [alerts] = useState<Alert[]>([
+  const [alerts, setAlerts] = useState<Alert[]>([
     {
       id: '1',
       type: 'danger',
@@ -33,6 +33,21 @@ export default function SafetyAlerts() {
       timestamp: new Date().toISOString(),
     },
   ]);
+
+  const [filteredAlerts, setFilteredAlerts] = useState<Alert[]>(alerts);
+  const [filter, setFilter] = useState<string>('all');
+  const [search, setSearch] = useState<string>('');
+
+  useEffect(() => {
+    // Apply filter and search when either filter or search changes
+    const filtered = alerts.filter(alert => {
+      const matchesFilter = filter === 'all' || alert.type === filter;
+      const matchesSearch = alert.message.toLowerCase().includes(search.toLowerCase()) ||
+          alert.location.toLowerCase().includes(search.toLowerCase());
+      return matchesFilter && matchesSearch;
+    });
+    setFilteredAlerts(filtered);
+  }, [alerts, filter, search]);
 
   const getAlertStyles = (type: string) => {
     switch (type) {
@@ -61,19 +76,40 @@ export default function SafetyAlerts() {
   };
 
   return (
-      <div className="bg-white rounded-lg shadow-lg p-6">
+      <div className="bg-white rounded-2xl hover-lift shadow-lg p-6">
         <div className="flex items-center space-x-2 mb-6">
           <Bell className="h-6 w-6 text-purple-500" />
-          <h2 className="text-xl font-semibold text-teal-800">Safety Alerts</h2>
+          <h2 className="text-xl font-semibold text-black-800">Safety Alerts</h2>
+        </div>
+
+        {/* Search Bar */}
+        <input
+            type="text"
+            placeholder="Search by message or location"
+            className="mb-4 p-2 border rounded-md w-full"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+        />
+
+        {/* Filter Dropdown */}
+        <div className="mb-4">
+          <select
+              className="p-2 border rounded-md"
+              value={filter}
+              onChange={(e) => setFilter(e.target.value)}
+          >
+            <option value="all">All Alerts</option>
+            <option value="danger">Danger</option>
+            <option value="warning">Warning</option>
+            <option value="info">Info</option>
+          </select>
         </div>
 
         <div className="space-y-4">
-          {alerts.map((alert) => (
+          {filteredAlerts.map((alert) => (
               <div
                   key={alert.id}
-                  className={`p-4 border-l-4 rounded-lg flex items-start space-x-3 ${getAlertStyles(
-                      alert.type
-                  )}`}
+                  className={`p-4 border-l-4 rounded-lg flex items-start space-x-3 ${getAlertStyles(alert.type)}`}
               >
                 {getAlertIcon(alert.type)}
                 <div>
@@ -88,9 +124,9 @@ export default function SafetyAlerts() {
           ))}
         </div>
 
-        <button className="mt-4 w-full text-black-500 hover:text-rose-700 text-sm font-medium">
+       {/* <button className="mt-4 w-full text-black-500 hover:text-rose-700 text-sm font-medium">
           View All Alerts
-        </button>
+        </button>*/}
       </div>
   );
 }
