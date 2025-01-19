@@ -114,7 +114,7 @@ export default function FakeCaller() {
               {/* Trigger Call Button */}
               <button
                   onClick={handleStartCall}
-                  className="w-full flex items-center justify-center space-x-2 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
+                  className="w-full flex items-center justify-center space-x-2 bg-purple-500 text-white py-2 px-4 rounded-md hover:bg-purple-600"
               >
                 <Phone className="h-5 w-5" />
                 <span>Trigger Fake Call</span>

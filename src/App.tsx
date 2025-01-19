@@ -15,6 +15,7 @@ import ContactManagerPage from "./pages/ContactManger.tsx";
 import AIChat from "./pages/AIChat.tsx";
 import PanicMode from "./components/PanicMode.tsx";
 import AboutPage from "./pages/About.tsx";
+import PeriodDetails from "./pages/PeriodDetails.tsx";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
               <Route path="/about" element={<AboutPage />} />
               <Route path="/report" element={<ReportPage />} />
               <Route path="/location" element={<LocationPage />} />
+              <Route path="/period-details" element={<PeriodDetails/>} />
               <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/contacts" element={<ContactManagerPage />} />
               <Route path="/login" element={<LoginForm />} />

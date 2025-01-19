@@ -7,6 +7,8 @@ import SafetyTips from '../components/SafetyTips';
 import SafeRouteMap from '../components/SafeRouteMap';
 import FakeCaller from '../components/FakeCaller';
 import IncidentNotifications from '../components/IncidentNotifications';
+import VoiceActivatedSOS from "../components/VoiceActivatedSOS.tsx";
+import PeriodTracker from "../components/PeriodTracker.tsx";
 
 
 export default function DashboardPage() {
@@ -66,6 +68,7 @@ export default function DashboardPage() {
                     ))}
                 </ul>
             </div>
+                <VoiceActivatedSOS/>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <IncidentNotifications/>
                 <SafetyAlerts/>
