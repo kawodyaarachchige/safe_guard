@@ -7,6 +7,7 @@ export default function PeriodDetails() {
             <div className="container mx-auto">
                 <PeriodTracker />
             </div>
+
         </div>
     );
 }

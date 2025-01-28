@@ -8,7 +8,6 @@ import SafeRouteMap from '../components/SafeRouteMap';
 import FakeCaller from '../components/FakeCaller';
 import IncidentNotifications from '../components/IncidentNotifications';
 import VoiceActivatedSOS from "../components/VoiceActivatedSOS.tsx";
-import PeriodTracker from "../components/PeriodTracker.tsx";
 
 
 export default function DashboardPage() {

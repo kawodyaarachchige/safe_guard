@@ -5,6 +5,9 @@ export interface CycleDay {
     flow: 'light' | 'medium' | 'heavy' | null;
     symptoms: string[];
     notes: string;
+
+
+
 }
 
 export interface CycleData {
@@ -88,7 +91,9 @@ const cycleSlice = createSlice({
             }
         },
     },
+
 });
+
 
 export const {
     addCycle,

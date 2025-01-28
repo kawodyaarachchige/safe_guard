@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Shield, MapPin, Bell, Users, Heart } from 'lucide-react';
+import ChatBot from "../components/ChatBot.tsx";
 
 export default function HomePage() {
   return (
