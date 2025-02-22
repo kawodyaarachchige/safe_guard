@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Mic, MicOff, Volume2, AlertTriangle } from 'lucide-react';
 import { RootState } from '../store/store';
-import { api } from '../services/api';
+import { userApi } from '../services/userApi.ts';
 
 export default function VoiceActivatedSOS() {
     const dispatch = useDispatch();
@@ -58,7 +58,7 @@ export default function VoiceActivatedSOS() {
 
         setIsActivated(true);
         try {
-            await api.sendEmergencyAlert({
+            await userApi.sendEmergencyAlert({
                 userId: user.id,
                 location: currentLocation,
                 timestamp: new Date().toISOString(),

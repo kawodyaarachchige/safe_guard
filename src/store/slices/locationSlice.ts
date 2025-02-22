@@ -28,6 +28,8 @@ const locationSlice = createSlice({
         state.currentLocation = null;
       }
     },
+
+
   },
 });
 

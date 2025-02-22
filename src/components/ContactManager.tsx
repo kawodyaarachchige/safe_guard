@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { UserPlus, Edit2, Trash2, Star, Phone, Mail, Heart } from 'lucide-react';
 import { RootState } from '../store/store';
-import { Contact, addContact, updateContact, deleteContact } from '../store/slices/contactSlice';
+import { Contact, fetchContacts, saveContact, updateContact, deleteContact } from '../store/slices/contactSlice';
+
 
 export default function ContactManager() {
     const dispatch = useDispatch();
-    const { contacts, loading } = useSelector((state: RootState) => state.contacts);
+    const { contacts, loading, error } = useSelector((state: RootState) => state.contacts);
     const [isEditing, setIsEditing] = useState(false);
     const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
     const [formData, setFormData] = useState({
@@ -18,24 +19,30 @@ export default function ContactManager() {
         isFavorite: false,
     });
 
-    const handleSubmit = (e: React.FormEvent) => {
+    useEffect(() => {
+        dispatch(fetchContacts());
+    }, [dispatch]);
+
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
         const contactData = {
-            id: selectedContact?.id || Date.now().toString(),
+            ...(selectedContact && { _id: selectedContact._id }), // Only include _id for updates
             ...formData,
             lastUpdated: new Date().toISOString(),
-            isFavorite: formData.isFavorite,
+            user: '67b7d41f88cfa607351e0ca3',
         };
 
         if (selectedContact) {
-            dispatch(updateContact(contactData));
+            await dispatch(updateContact(contactData));
         } else {
-            dispatch(addContact(contactData));
+            await dispatch(saveContact(contactData));
         }
 
         resetForm();
+        dispatch(fetchContacts());
     };
+
 
     const handleEdit = (contact: Contact) => {
         setSelectedContact(contact);
@@ -45,14 +52,15 @@ export default function ContactManager() {
             email: contact.email,
             relationship: contact.relationship,
             isEmergencyContact: contact.isEmergencyContact,
-            isFavorite: contact.isFavorite, // Ensure this is loaded as well
+            isFavorite: contact.isFavorite,
         });
         setIsEditing(true);
     };
 
-    const handleDelete = (id: string) => {
+    const handleDelete = async (id: string) => {
         if (window.confirm('Are you sure you want to delete this contact?')) {
-            dispatch(deleteContact(id));
+            await dispatch(deleteContact(id));
+            dispatch(fetchContacts()); // Refresh the list after deleting
         }
     };
 
@@ -64,7 +72,7 @@ export default function ContactManager() {
             email: '',
             relationship: '',
             isEmergencyContact: false,
-            isFavorite: false, // Reset the isFavorite flag
+            isFavorite: false,
         });
         setIsEditing(false);
     };
@@ -85,6 +93,12 @@ export default function ContactManager() {
                     </button>
                 )}
             </div>
+
+            {error && (
+                <div className="bg-red-100 text-red-700 p-3 rounded-md mb-4">
+                    {error}
+                </div>
+            )}
 
             {isEditing && (
                 <form onSubmit={handleSubmit} className="glass-effect rounded-xl p-6 space-y-4">
@@ -179,7 +193,7 @@ export default function ContactManager() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {contacts.map((contact) => (
                     <div
-                        key={contact.id}
+                        key={contact._id}
                         className="glass-effect rounded-xl p-4 hover-lift"
                     >
                         <div className="flex justify-between items-start mb-3">
@@ -190,7 +204,7 @@ export default function ContactManager() {
                                         <Heart className="h-4 w-4 text-pink-500 ml-2" />
                                     )}
                                     {contact.isFavorite && (
-                                        <Star className="h-4 w-4 text-yellow-500 ml-2" /> // Show star for favorite contacts
+                                        <Star className="h-4 w-4 text-yellow-500 ml-2" />
                                     )}
                                 </h3>
                                 <p className="text-sm text-gray-600">{contact.relationship}</p>
@@ -203,7 +217,7 @@ export default function ContactManager() {
                                     <Edit2 className="h-4 w-4" />
                                 </button>
                                 <button
-                                    onClick={() => handleDelete(contact.id)}
+                                    onClick={() => handleDelete(contact._id)}
                                     className="text-gray-600 hover:text-red-600"
                                 >
                                     <Trash2 className="h-4 w-4" />

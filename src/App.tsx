@@ -1,3 +1,11 @@
+/**
+ * Project Name: SafeGuard
+ * Author: Tharushi Kawodya
+ * Email: kawodya.wa@gmail.com
+ * Copyright (c) 2025 TK. All rights reserved.
+ * Unauthorized copying of this file, via any medium, is strictly prohibited.
+ * Licensed under the MIT License.
+ */
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';

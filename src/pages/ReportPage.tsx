@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { AlertTriangle } from 'lucide-react';
-import { addIncident, setLoading, setError, clearIncidents } from '../store/slices/incidentSlice';
-import { RootState } from '../store';
+import { saveIncident, setLoading, setError, clearIncidents } from '../store/slices/incidentSlice';
+import {RootState} from "@reduxjs/toolkit/query";
+import {incidentApi} from "../services/incidentApi.ts";
+
 
 export default function ReportPage() {
   const dispatch = useDispatch();
@@ -15,6 +17,7 @@ export default function ReportPage() {
   });
 
   const { loading, error } = useSelector((state: RootState) => state.incidents);
+
   const [success, setSuccess] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
 
@@ -23,16 +26,15 @@ export default function ReportPage() {
     dispatch(setLoading(true));
 
     try {
-      const incident = {
-        id: Date.now().toString(),
-        type: formData.type,
-        description: formData.description,
-        location: formData.location,
+      const incident = await incidentApi.saveIncident({
+        user: "67b7d41f88cfa607351e0ca3",  // Ensure user is always included
+        type: formData.type || "Unknown", // Prevent empty fields
+        description: formData.description || "No description provided",
+        location: formData.location || "Unknown",
         timestamp: new Date().toISOString(),
-        status: 'pending' as const,
-      };
+      });
 
-      dispatch(addIncident(incident));
+      dispatch(saveIncident(incident));
       setSuccess(true);
       setFormData({ type: '', description: '', location: '' });
 

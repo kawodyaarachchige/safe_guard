@@ -1,12 +1,29 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
-import { AlertTriangle, MapPin, Clock, ChevronRight } from 'lucide-react';
-import { RootState } from '../store/store';
+import {AlertTriangle, ChevronRight, Clock, MapPin} from "lucide-react";
+import React, {useEffect} from "react";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "@reduxjs/toolkit/query";
+import {fetchIncidents} from "../store/slices/incidentSlice.ts";
 
 export default function IncidentNotifications() {
-    const { incidents } = useSelector((state: RootState) => state.incidents);
+    const dispatch = useDispatch();
+    const { incidents, loading, error } = useSelector((state: RootState) => state.incidents);
 
-    const getIncidentColor = (type: string) => {
+    useEffect(() => {
+        dispatch(fetchIncidents()); // Fetch incidents when the component mounts
+    }, [dispatch]);
+
+    console.log('Incidents in Redux Store:', incidents); // Log the incidents array
+
+    if (loading) {
+        return <p>Loading incidents...</p>;
+    }
+
+    if (error) {
+        return <p>Error: {error}</p>;
+    }
+
+    const getIncidentColor = (type?: string) => {
+        if (!type) return 'text-gray-600 bg-gray-50'; // Default color if type is missing
         switch (type.toLowerCase()) {
             case 'harassment':
                 return 'text-red-600 bg-red-50';
@@ -26,7 +43,7 @@ export default function IncidentNotifications() {
 
     if (incidents.length === 0) {
         return (
-            <div className="bg-white  hover-lift rounded-2xl shadow-lg p-6">
+            <div className="bg-white hover-lift rounded-2xl shadow-lg p-6">
                 <div className="flex items-center space-x-2 mb-6">
                     <AlertTriangle className="h-6 w-6 text-purple-600" />
                     <h2 className="text-xl font-semibold">Recent Incidents</h2>
@@ -37,7 +54,7 @@ export default function IncidentNotifications() {
     }
 
     return (
-        <div className="bg-white rounded-2xl  shadow-lg  hover-lift p-6">
+        <div className="bg-white rounded-2xl shadow-lg hover-lift p-6">
             <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center space-x-2">
                     <AlertTriangle className="h-6 w-6 text-purple-600" />
@@ -51,7 +68,7 @@ export default function IncidentNotifications() {
             <div className="space-y-4">
                 {incidents.map((incident) => (
                     <div
-                        key={incident.id}
+                        key={incident._id} // Use _id as the key
                         className="group hover-lift glass-effect rounded-xl p-4 cursor-pointer"
                     >
                         <div className="flex items-start justify-between">

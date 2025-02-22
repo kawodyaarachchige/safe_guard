@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { UserPlus } from 'lucide-react';
 import { setUser } from '../store/slices/userSlice';
-import { api } from '../services/api';
+import { userApi } from '../services/userApi.ts';
 
 export default function SignupForm() {
   const dispatch = useDispatch();
@@ -28,8 +28,8 @@ export default function SignupForm() {
     setError('');
 
     try {
-      const user = await api.signup(formData.name, formData.email, formData.password);
-      dispatch(setUser(user));
+      const user = await userApi.signup(formData.name, formData.email, formData.password);
+      await dispatch(setUser(user));
       navigate('/dashboard');
     } catch (err) {
       setError('Failed to create account');
