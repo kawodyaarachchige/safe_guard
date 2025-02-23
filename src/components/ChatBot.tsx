@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { MessageCircleMore, Send, X} from "lucide-react";
+import {loadEnv} from "vite";
 
 const ChatBot: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [prompt, setPrompt] = useState("");
     const [isHovered, setIsHovered] = useState(false);
     const [messages, setMessages] = useState<{ sender: string; text: string }[]>([]);
-    const apiKey = "AIzaSyAoxY1EN-VOGVQlXtvJdEUKstsBGwOnQqg"; // Replace with your API key
+    const apiKey = import.meta.env.VITE_API_KEY;
 
     const toggleChat = () => setIsOpen(!isOpen);
 
@@ -157,7 +158,7 @@ const ChatBot: React.FC = () => {
                             style={{
                                 marginLeft: "10px",
                                 padding: "8px 12px",
-                                backgroundColor: "#007bff",
+                                backgroundColor: "deeppink",
                                 color: "white",
                                 border: "none",
                                 borderRadius: "4px",

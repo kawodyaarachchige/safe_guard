@@ -8,6 +8,7 @@ import { Contact, fetchContacts, saveContact, updateContact, deleteContact } fro
 export default function ContactManager() {
     const dispatch = useDispatch();
     const { contacts, loading, error } = useSelector((state: RootState) => state.contacts);
+    const user = useSelector((state: RootState) => state.user.user);
     const [isEditing, setIsEditing] = useState(false);
     const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
     const [formData, setFormData] = useState({

@@ -15,7 +15,7 @@ export const contactApi = {
     },
 
     updateContact: async (contact: Contact): Promise<Contact> => {
-        const response = await axios.put(`${API_BASE_URL}update/${contact.id}`, contact);
+        const response = await axios.put(`${API_BASE_URL}update/${contact._id}`, contact);
         return response.data;
     },
 
