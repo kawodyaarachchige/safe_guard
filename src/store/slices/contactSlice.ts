@@ -15,6 +15,7 @@ export interface Contact {
 interface ContactState {
     contacts: Contact[];
     loading: boolean;
+    updating: {[key: string]: boolean}; // Track updates per contact
     error: string | null;
     selectedContact: Contact | null;
 }
@@ -22,39 +23,90 @@ interface ContactState {
 const initialState: ContactState = {
     contacts: [],
     loading: false,
+    updating: {},
     error: null,
     selectedContact: null,
 };
 
-export const fetchContacts = createAsyncThunk("contact/fetchContacts", async () => {
-    return await contactApi.fetchContacts();
-});
+export const fetchContacts = createAsyncThunk(
+    "contact/fetchContacts",
+    async (_, { rejectWithValue }) => {
+        try {
+            const contacts = await contactApi.fetchContacts();
+            return contacts;
+        } catch (error: any) {
+            return rejectWithValue(error.message || 'Failed to fetch contacts');
+        }
+    }
+);
 
-export const saveContact = createAsyncThunk("contact/saveContact", async (contact: Contact) => {
-    return await contactApi.saveContact(contact);
-});
+export const saveContact = createAsyncThunk(
+    "contact/saveContact",
+    async (contact: Contact, { rejectWithValue }) => {
+        try {
+            const savedContact = await contactApi.saveContact(contact);
+            return savedContact;
+        } catch (error: any) {
+            return rejectWithValue(error.message || 'Failed to save contact');
+        }
+    }
+);
 
-export const updateContact = createAsyncThunk("contact/updateContact", async (contact: Contact) => {
-    return await contactApi.updateContact(contact);
-});
+export const updateContact = createAsyncThunk(
+    "contact/updateContact",
+    async (contact: Contact, { rejectWithValue }) => {
+        try {
+            const updatedContact = await contactApi.updateContact(contact);
+            return updatedContact;
+        } catch (error: any) {
+            return rejectWithValue(error.message || 'Failed to update contact');
+        }
+    }
+);
 
-export const deleteContact = createAsyncThunk("contact/deleteContact", async (id: string) => {
-    await contactApi.deleteContact(id);
-    return id; // Return ID to filter out from state
-});
+export const deleteContact = createAsyncThunk(
+    "contact/deleteContact",
+    async (id: string, { rejectWithValue }) => {
+        try {
+            await contactApi.deleteContact(id);
+            return id;
+        } catch (error: any) {
+            return rejectWithValue(error.message || 'Failed to delete contact');
+        }
+    }
+);
+export const getPhoneNumber = createAsyncThunk(
+    "contact/getPhoneNumber",
+    async (id: string, { rejectWithValue }) => {
+        try {
+            const phoneNumber = await contactApi.getContactNumbers();
+            return phoneNumber;
+        } catch (error: any) {
+            return rejectWithValue(error.message || 'Failed to get phone number');
+        }
+    }
+)
 
 const contactSlice = createSlice({
     name: 'contacts',
     initialState,
     reducers: {
-        // Set selected contact
         setSelectedContact: (state, action: PayloadAction<string>) => {
             state.selectedContact = state.contacts.find(contact => contact._id === action.payload) || null;
         },
-        // Clear error
         clearError: (state) => {
             state.error = null;
         },
+        optimisticUpdateContact: (state, action: PayloadAction<Contact>) => {
+            const index = state.contacts.findIndex(contact => contact._id === action.payload._id);
+            if (index !== -1) {
+                // Keep the existing contact in case we need to rollback
+                const oldContact = state.contacts[index];
+                // Update with new data
+                state.contacts[index] = action.payload;
+                return oldContact; // Return for potential rollback
+            }
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -69,55 +121,62 @@ const contactSlice = createSlice({
             })
             .addCase(fetchContacts.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.error.message || 'Failed to fetch contacts';
+                state.error = action.payload as string;
             })
 
             // Save Contact
             .addCase(saveContact.pending, (state) => {
-                state.loading = true;
                 state.error = null;
             })
             .addCase(saveContact.fulfilled, (state, action) => {
-                state.loading = false;
-                state.contacts.push(action.payload);
+                state.contacts.unshift(action.payload);
             })
             .addCase(saveContact.rejected, (state, action) => {
-                state.loading = false;
-                state.error = action.error.message || 'Failed to save contact';
+                state.error = action.payload as string;
             })
 
             // Update Contact
-            .addCase(updateContact.pending, (state) => {
-                state.loading = true;
+            .addCase(updateContact.pending, (state, action) => {
+                // Set updating flag for specific contact
+                state.updating[action.meta.arg._id] = true;
                 state.error = null;
             })
             .addCase(updateContact.fulfilled, (state, action) => {
-                state.loading = false;
                 const index = state.contacts.findIndex(contact => contact._id === action.payload._id);
                 if (index !== -1) {
                     state.contacts[index] = action.payload;
                 }
+                // Clear updating flag
+                delete state.updating[action.payload._id];
             })
             .addCase(updateContact.rejected, (state, action) => {
-                state.loading = false;
-                state.error = action.error.message || 'Failed to update contact';
+                // Clear updating flag on error
+                if (action.meta?.arg?._id) {
+                    delete state.updating[action.meta.arg._id];
+                }
+                state.error = action.payload as string;
             })
 
             // Delete Contact
-            .addCase(deleteContact.pending, (state) => {
-                state.loading = true;
+            .addCase(deleteContact.pending, (state, action) => {
+                // Set updating flag for specific contact
+                state.updating[action.meta.arg] = true;
                 state.error = null;
             })
             .addCase(deleteContact.fulfilled, (state, action) => {
-                state.loading = false;
                 state.contacts = state.contacts.filter(contact => contact._id !== action.payload);
+                // Clear updating flag
+                delete state.updating[action.payload];
             })
             .addCase(deleteContact.rejected, (state, action) => {
-                state.loading = false;
-                state.error = action.error.message || 'Failed to delete contact';
+                // Clear updating flag on error
+                if (action.meta?.arg) {
+                    delete state.updating[action.meta.arg];
+                }
+                state.error = action.payload as string;
             });
     },
 });
 
-export const { setSelectedContact, clearError } = contactSlice.actions;
+export const { setSelectedContact, clearError, optimisticUpdateContact } = contactSlice.actions;
 export default contactSlice.reducer;

@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { UserPlus, Edit2, Trash2, Star, Phone, Mail, Heart } from 'lucide-react';
-import { RootState } from '../store/store';
+import {AppDispatch, RootState} from '../store/store';
 import { Contact, fetchContacts, saveContact, updateContact, deleteContact } from '../store/slices/contactSlice';
 
 
 export default function ContactManager() {
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
     const { contacts, loading, error } = useSelector((state: RootState) => state.contacts);
     const user = useSelector((state: RootState) => state.user.user);
     const [isEditing, setIsEditing] = useState(false);
@@ -19,10 +19,13 @@ export default function ContactManager() {
         isEmergencyContact: false,
         isFavorite: false,
     });
-
-    useEffect(() => {
+    const fetchData = useCallback(() => {
         dispatch(fetchContacts());
     }, [dispatch]);
+
+    useEffect(() => {
+        fetchData();
+    }, [fetchData]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -61,7 +64,7 @@ export default function ContactManager() {
     const handleDelete = async (id: string) => {
         if (window.confirm('Are you sure you want to delete this contact?')) {
             await dispatch(deleteContact(id));
-            dispatch(fetchContacts()); // Refresh the list after deleting
+            dispatch(fetchContacts());
         }
     };
 

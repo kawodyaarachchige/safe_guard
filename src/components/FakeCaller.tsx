@@ -1,18 +1,48 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Phone, Volume2, X, Clock } from 'lucide-react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getPhoneNumber } from '../store/slices/contactSlice';
+import { AppDispatch, RootState } from '../store/store';
 
 export default function FakeCaller() {
+  const dispatch = useDispatch<AppDispatch>();
   const [isActive, setIsActive] = useState(false);
   const [selectedContact, setSelectedContact] = useState('');
   const [customContact, setCustomContact] = useState({ name: '', number: '' });
   const [delay, setDelay] = useState(0);
-  const ringtoneRef = useRef(null);
+  const [contacts, setContacts] = useState<{ name: string; number: string }[]>([]); // State for fetched contacts
+  const [isLoading, setIsLoading] = useState(false); // Loading state
+  const [error, setError] = useState<string | null>(null); // Error state
+  const ringtoneRef = useRef<HTMLAudioElement>(null);
 
-  const fakeContacts = [
-    { name: 'Mom', number: '+1234567890' },
-    { name: 'Dad', number: '+1234567891' },
-    { name: 'Home', number: '+1234567892' },
-  ];
+  useEffect(() => {
+    const fetchContacts = async () => {
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        const result = await dispatch(getPhoneNumber()).unwrap();
+
+        if (!Array.isArray(result)) {
+          throw new Error("Invalid response format");
+        }
+        const formattedContacts = result.map((contact: { name: string; phone: string }) => ({
+          name: contact.name,
+          number: contact.phone,
+        }));
+
+        setContacts(formattedContacts);
+      } catch (err) {
+        setError("Failed to fetch contacts");
+        console.error(err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchContacts();
+  }, [dispatch]);
+
 
   const handleStartCall = () => {
     if (!selectedContact && !customContact.name) {
@@ -66,14 +96,17 @@ export default function FakeCaller() {
                     value={selectedContact}
                     onChange={(e) => setSelectedContact(e.target.value)}
                     className="w-full rounded-md border border-gray-300 shadow-sm focus:border-gray-500 focus:ring-teal-500"
+                    disabled={isLoading} // Disable while loading
                 >
                   <option value="">Choose a contact</option>
-                  {fakeContacts.map((contact, index) => (
+                  {contacts.map((contact, index) => (
                       <option key={index} value={contact.name}>
                         {contact.name} ({contact.number})
                       </option>
                   ))}
                 </select>
+                {isLoading && <p className="text-sm text-gray-500">Loading contacts...</p>}
+                {error && <p className="text-sm text-red-500">{error}</p>}
               </div>
 
               {/* Custom Contact */}
@@ -106,7 +139,7 @@ export default function FakeCaller() {
                     type="number"
                     min="0"
                     value={delay}
-                    onChange={(e) => setDelay(e.target.value)}
+                    onChange={(e) => setDelay(Number(e.target.value))}
                     className="w-full rounded-md border border-gray-300 shadow-sm focus:border-gray-500 focus:ring-teal-500"
                 />
               </div>
@@ -115,6 +148,7 @@ export default function FakeCaller() {
               <button
                   onClick={handleStartCall}
                   className="w-full flex items-center justify-center space-x-2 bg-purple-500 text-white py-2 px-4 rounded-md hover:bg-purple-600"
+                  disabled={isLoading} // Disable while loading
               >
                 <Phone className="h-5 w-5" />
                 <span>Trigger Fake Call</span>
