@@ -5,6 +5,7 @@ import { AlertTriangle } from 'lucide-react';
 import { saveIncident, setLoading, setError, clearIncidents } from '../store/slices/incidentSlice';
 import {RootState} from "@reduxjs/toolkit/query";
 import {incidentApi} from "../services/incidentApi.ts";
+import Cookies from "js-cookie";
 
 
 export default function ReportPage() {
@@ -28,7 +29,7 @@ export default function ReportPage() {
 
     try {
       const incident = await incidentApi.saveIncident({
-        user:user?.id,  // Ensure user is always included
+        user: Cookies.get("user_id"),  // Ensure user is always included
         type: formData.type || "Unknown", // Prevent empty fields
         description: formData.description || "No description provided",
         location: formData.location || "Unknown",

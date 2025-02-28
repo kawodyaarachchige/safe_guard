@@ -48,7 +48,7 @@ export const contactApi = {
     getContactNumbers: async (): Promise<{ name: string; phone: string }[]> => {
         try {
             const response = await axios.get(`${API_BASE_URL}getContactNumbers/${Cookies.get('user_id')}`);
-            return response.data;
+            return response.data? response.data : [];
         } catch (error) {
             console.error("Error fetching contact numbers:", error);
             throw new Error("Failed to fetch contact numbers.");

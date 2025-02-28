@@ -37,8 +37,8 @@ export const fetchCycles = createAsyncThunk(
     'cycle/fetchCycles',
     async (_, { rejectWithValue }) => {
         try {
-            // Simulate an API call to fetch cycles
-            const response = await fetch('/api/cycles');
+
+            const response = await fetch('/api/cycle/save');
             const data = await response.json();
             return data;
         } catch (error: any) {
@@ -48,10 +48,10 @@ export const fetchCycles = createAsyncThunk(
 );
 
 export const saveCycle = createAsyncThunk(
-    'cycle/saveCycle',
+    'cycle/saveCircle',
     async (cycle: CycleData, { rejectWithValue }) => {
         try {
-            const response = await fetch('/api/cycles', {
+            const response = await fetch('/api/cycle', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(cycle),
@@ -68,7 +68,7 @@ export const updateCycle = createAsyncThunk(
     'cycle/updateCycle',
     async (cycle: CycleData, { rejectWithValue }) => {
         try {
-            const response = await fetch(`/api/cycles/${cycle.id}`, {
+            const response = await fetch(`/api/cycle/${cycle.id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(cycle),
@@ -86,7 +86,7 @@ export const deleteCycle = createAsyncThunk(
     async (id: string, { rejectWithValue }) => {
         try {
 
-            await fetch(`/api/cycles/${id}`, {
+            await fetch(`/api/cycle/${id}`, {
                 method: 'DELETE',
             });
             return id;

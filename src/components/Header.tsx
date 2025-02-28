@@ -1,17 +1,30 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { LogOut, Heart } from 'lucide-react';
+import {LogOut, Heart, Cookie} from 'lucide-react';
 import { RootState } from '../store/store';
-import { clearUser } from '../store/slices/userSlice';
+import {clearUser, setUser} from '../store/slices/userSlice';
+import Cookies from "js-cookie";
+import {all} from "axios";
 
 export default function Header() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { user } = useSelector((state: RootState) => state.user);
 
+  useEffect(() => {
+    if (!user) {
+      const userId = Cookies.get('user_id')
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      userId? dispatch(setUser(userId)) : navigate('/');
+    }
+  }, []);
+
   const handleLogout = () => {
     dispatch(clearUser());
+    Cookies.remove('user_id');
+    Cookies.remove('user_email');
+    Cookies.remove('user_name');
     navigate('/');
   };
 

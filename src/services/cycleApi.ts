@@ -5,7 +5,7 @@ import {Circle} from "@react-google-maps/api";
 const API_BASE_URL = "http://localhost:5002/api/cycle/";
 
 export const cycleApi = {
-    fetchCircles: async (): Promise<Circle[]> => {
+    fetchCycles: async (): Promise<Circle[]> => {
         try {
             const response = await axios.get(`${API_BASE_URL}all`);
             return response.data;
@@ -14,7 +14,7 @@ export const cycleApi = {
             throw new Error("Failed to fetch circles.");
         }
     },
-    saveCircle: async (circle: Circle): Promise<Circle> => {
+    saveCycle: async (circle: Circle): Promise<Circle> => {
         try {
             const response = await axios.post(`${API_BASE_URL}save`, circle);
             return response.data;
@@ -23,7 +23,7 @@ export const cycleApi = {
             throw new Error("Failed to save circle.");
         }
     },
-    updateCircle: async (circle: Circle): Promise<Circle> => {
+    updateCycle: async (circle: Circle): Promise<Circle> => {
         try {
             const response = await axios.put(`${API_BASE_URL}update/${circle._id}`, circle);
             return response.data;
@@ -32,7 +32,7 @@ export const cycleApi = {
             throw new Error("Failed to update circle.");
         }
     },
-    deleteCircle: async (id: string): Promise<void> => {
+    deleteCycle: async (id: string): Promise<void> => {
         try {
             await axios.delete(`${API_BASE_URL}delete/${id}`);
         } catch (error) {

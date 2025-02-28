@@ -34,7 +34,7 @@ export const emergencyApi = {
         };
     }) => {
         try {
-            const response = await axios.post(`${API_BASE_URL}save`, data);
+            const response = await axios.post(`${API_BASE_URL}/save`, data);
             return response.data;
         } catch (error) {
             console.error('Error sending emergency alert:', error);

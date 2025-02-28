@@ -39,7 +39,7 @@ export default function LiveLocation() {
 
             dispatch(setCurrentLocation({ latitude, longitude }));
             setError('');
-            fetchAddress(latitude, longitude); // Fetch address for the location
+            fetchAddress(latitude, longitude);
           },
           (err) => {
             setError('Failed to get location: ' + err.message);
@@ -67,7 +67,7 @@ export default function LiveLocation() {
       <div className="bg-white rounded-lg shadow-md p-6">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-semibold flex items-center">
-            <MapPin className="h-6 w-6 text-purple-600 mr-2"/>
+            <MapPin className="h-6 w-6 text-purple-600 mr-2" />
             Live Location
           </h2>
           <button
@@ -80,7 +80,7 @@ export default function LiveLocation() {
               }
           `}
           >
-            <Navigation className="h-4 w-4"/>
+            <Navigation className="h-4 w-4" />
             <span>{isTracking ? 'Stop Tracking' : 'Start Tracking'}</span>
           </button>
         </div>
@@ -111,32 +111,24 @@ export default function LiveLocation() {
               {isTracking ? 'Getting location...' : 'Location tracking is disabled'}
             </p>
         )}
+
         <button
             onClick={() => {
               if (currentLocation) {
                 const locationURL = `https://www.google.com/maps?q=${currentLocation.latitude},${currentLocation.longitude}`;
                 const message = `Check out this location: ${locationURL}`;
 
-                const contactMethod = prompt('Enter "email" to share via email or "sms" for a phone number:');
-
-                if (contactMethod?.trim().toLowerCase() === 'email') {
-                  const recipientEmail = prompt('Enter the recipient email address:');
-                  if (recipientEmail) {
+                const recipientEmail = prompt('Enter the recipient email address:');
+                if (recipientEmail) {
+                  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                  if (emailRegex.test(recipientEmail)) {
                     const mailtoLink = `mailto:${recipientEmail}?subject=Location Sharing&body=${encodeURIComponent(message)}`;
                     window.location.href = mailtoLink;
                   } else {
-                    alert('Email address is required to share via email.');
-                  }
-                } else if (contactMethod?.trim().toLowerCase() === 'sms') {
-                  const recipientPhone = prompt('Enter the recipient phone number:');
-                  if (recipientPhone) {
-                    const smsLink = `sms:${recipientPhone}?body=${encodeURIComponent(message)}`;
-                    window.location.href = smsLink;
-                  } else {
-                    alert('Phone number is required to share via SMS.');
+                    alert('Please enter a valid email address.');
                   }
                 } else {
-                  alert('Invalid option. Please enter "email" or "sms".');
+                  alert('Email address is required to share via email.');
                 }
               } else {
                 alert('Current location is unavailable. Start tracking first.');
@@ -144,10 +136,8 @@ export default function LiveLocation() {
             }}
             className="mt-4 px-4 py-2 bg-green-100 text-green-600 rounded-md hover:bg-green-200"
         >
-          Share Location
+          Share Location via Email
         </button>
-
-
       </div>
   );
 }

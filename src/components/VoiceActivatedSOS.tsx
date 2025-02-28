@@ -13,10 +13,9 @@ export default function VoiceActivatedSOS() {
     const [recognition, setRecognition] = useState<any>(null);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-    // Hardcoded location for Panadura, Sri Lanka
     const currentLocation = {
-        latitude: 6.7156, // Latitude of Panadura
-        longitude: 79.9075, // Longitude of Panadura
+        latitude: 6.7156,
+        longitude: 79.9075,
     };
 
     const triggerPhrases = [

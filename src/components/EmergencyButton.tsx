@@ -10,7 +10,6 @@ import React, { useState } from 'react';
 import { AlertCircle } from 'lucide-react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
-import { userApi } from '../services/userApi.ts';
 import {emergencyApi} from "../services/emergancyApi.ts";
 
 export default function EmergencyButton() {
