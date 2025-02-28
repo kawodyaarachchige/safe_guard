@@ -64,16 +64,12 @@ export default function IncidentNotifications() {
             setIsUpdating(true);
             await dispatch(updateIncident(editedIncident)).unwrap();
 
-            // Update the local state first
             const updatedIncidents = incidents.map(inc =>
                 inc._id === editedIncident._id ? editedIncident : inc
             );
-
-            // Reset states
             setEditingIncidentId(null);
             setEditedIncident(null);
 
-            // Then fetch fresh data
             await dispatch(fetchIncidents());
         } catch (error) {
             console.error("Error updating incident:", error);

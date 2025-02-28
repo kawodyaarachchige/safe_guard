@@ -28,9 +28,9 @@ export const fetchIncidents = createAsyncThunk(
     'incidents/fetchIncidents',
     async (_, { rejectWithValue }) => {
       try {
-        const incidents = await incidentApi.fetchIncidents(); // Use the API function
-        console.log('API Response:', incidents); // Log the API response
-        return incidents; // Return the array of incidents
+        const incidents = await incidentApi.fetchIncidents();
+        console.log('API Response:', incidents);
+        return incidents;
       } catch (error) {
         console.error('Error fetching incidents:', error); // Log the error
         return rejectWithValue(error.message || 'Failed to fetch incidents');

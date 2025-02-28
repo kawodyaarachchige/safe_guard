@@ -1,5 +1,6 @@
 import {Incident} from "../store/slices/incidentSlice.ts";
 import axios from "axios";
+import Cookies from "js-cookie";
 
 const API_BASE_URL = 'http://localhost:5002/api/incident/';
 
@@ -34,7 +35,7 @@ export const incidentApi = {
     // Add this function to fetch incidents
     fetchIncidents: async (): Promise<Incident[]> => {
         try {
-            const response = await fetch(`${API_BASE_URL}/all`);
+            const response = await fetch(`${API_BASE_URL}incidents/${Cookies.get('user_id')}`);
             if (!response.ok) {
                 const errorText = await response.text(); // Read error as text
                 throw new Error(`Server Error: ${errorText}`);
@@ -42,7 +43,8 @@ export const incidentApi = {
 
             const contentType = response.headers.get("content-type");
             if (contentType && contentType.includes("application/json")) {
-                return await response.json(); // Parse JSON response
+                console.log(response)
+                return await response.json();
             } else {
                 const textResponse = await response.text();
                 throw new Error(`Unexpected response format: ${textResponse}`);

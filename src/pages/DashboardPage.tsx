@@ -48,14 +48,14 @@ export default function DashboardPage() {
                 </div>
                 <div className="glass-effect p-6 rounded-2xl hover-lift border-t-4 border-blue-500">
                     <Users className="h-8 w-8 text-blue-600 mb-2"/>
-                    <h3 className="font-semibold">Trusted Contacts</h3>
+                    <h3 className="font-semibold">My Contacts</h3>
                     <p className="text-sm text-gray-600">{contacts.length} Active</p>
                 </div>
 
             </div>
             <div className="glass-effect p-6 rounded-2xl hover-lift border-t-4 border-blue-500">
                 <Users className="h-8 w-8 text-blue-600 mb-2"/>
-                <h3 className="font-semibold">Trusted Contacts</h3>
+                <h3 className="font-semibold">Favorite Contacts</h3>
                 <p className="text-sm text-gray-600">
                     {favoriteContacts.length} Favorites
                 </p>

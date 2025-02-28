@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Calendar, Clock, Activity, FileText } from 'lucide-react';
 import { RootState } from '../store/store';
-import { addCycle, updateCycle, deleteCycle, calculateAverageCycle, CycleDay } from '../store/slices/cycleSlice';
+import { saveCycle, updateCycle, deleteCycle, calculateAverageCycle, CycleDay } from '../store/slices/cycleSlice';
 
 export default function PeriodTracker() {
     const dispatch = useDispatch();
@@ -46,7 +46,7 @@ export default function PeriodTracker() {
             }],
         };
 
-        dispatch(addCycle(cycleData));
+        dispatch(saveCycle(cycleData));
         dispatch(calculateAverageCycle());
         resetForm();
     };

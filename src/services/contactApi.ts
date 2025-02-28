@@ -1,12 +1,13 @@
 import axios from "axios";
 import { Contact } from "../store/slices/contactSlice.ts";
+import Cookies from "js-cookie";
 
 const API_BASE_URL = "http://localhost:5002/api/contact/";
 
 export const contactApi = {
     fetchContacts: async (): Promise<Contact[]> => {
         try {
-            const response = await axios.get(`${API_BASE_URL}all`);
+            const response = await axios.get(`${API_BASE_URL}user/${Cookies.get('user_id')}`);
             return response.data;
         } catch (error) {
             console.error("Error fetching contacts:", error);
@@ -46,7 +47,7 @@ export const contactApi = {
 
     getContactNumbers: async (): Promise<{ name: string; phone: string }[]> => {
         try {
-            const response = await axios.get(`${API_BASE_URL}getContactNumbers/`);
+            const response = await axios.get(`${API_BASE_URL}getContactNumbers/${Cookies.get('user_id')}`);
             return response.data;
         } catch (error) {
             console.error("Error fetching contact numbers:", error);

@@ -2,18 +2,23 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Mic, MicOff, Volume2, AlertTriangle } from 'lucide-react';
 import { RootState } from '../store/store';
-import { userApi } from '../services/userApi.ts';
+import { emergencyApi } from '../services/emergancyApi.ts'; // Ensure the import path is correct
 
 export default function VoiceActivatedSOS() {
     const dispatch = useDispatch();
     const { user } = useSelector((state: RootState) => state.user);
-    const { currentLocation } = useSelector((state: RootState) => state.location);
 
     const [isListening, setIsListening] = useState(false);
     const [isActivated, setIsActivated] = useState(false);
     const [recognition, setRecognition] = useState<any>(null);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-    // Trigger phrases that will activate SOS
+    // Hardcoded location for Panadura, Sri Lanka
+    const currentLocation = {
+        latitude: 6.7156, // Latitude of Panadura
+        longitude: 79.9075, // Longitude of Panadura
+    };
+
     const triggerPhrases = [
         'help me',
         'emergency',
@@ -23,11 +28,11 @@ export default function VoiceActivatedSOS() {
     ];
 
     useEffect(() => {
-        // Check if browser supports speech recognition
         if ('webkitSpeechRecognition' in window) {
             const recognitionInstance = new (window as any).webkitSpeechRecognition();
             recognitionInstance.continuous = true;
             recognitionInstance.interimResults = true;
+            recognitionInstance.lang = 'en-US'; // Set the language
 
             recognitionInstance.onresult = (event: any) => {
                 const transcript = Array.from(event.results)
@@ -35,7 +40,6 @@ export default function VoiceActivatedSOS() {
                     .join('')
                     .toLowerCase();
 
-                // Check if any trigger phrase is spoken
                 if (triggerPhrases.some(phrase => transcript.includes(phrase))) {
                     handleSOSTrigger();
                 }
@@ -43,10 +47,21 @@ export default function VoiceActivatedSOS() {
 
             recognitionInstance.onerror = (event: any) => {
                 console.error('Speech recognition error:', event.error);
+                if (event.error === 'no-speech') {
+                    setErrorMessage('No speech detected. Please try again.');
+                } else {
+                    setErrorMessage('Speech recognition error. Please check your microphone and try again.');
+                }
+                setIsListening(false);
+            };
+
+            recognitionInstance.onsoundend = () => {
                 setIsListening(false);
             };
 
             setRecognition(recognitionInstance);
+        } else {
+            setErrorMessage('Speech recognition is not supported in your browser.');
         }
     }, []);
 
@@ -58,10 +73,17 @@ export default function VoiceActivatedSOS() {
 
         setIsActivated(true);
         try {
-            await userApi.sendEmergencyAlert({
+            await emergencyApi.sendEmergencyAlert({
                 userId: user.id,
-                location: currentLocation,
-                timestamp: new Date().toISOString(),
+                contacts: [], // Add contacts if needed
+                lastLocation: {
+                    latitude: currentLocation.latitude,
+                    longitude: currentLocation.longitude,
+                },
+                panicMode: {
+                    active: true,
+                    recording: false,
+                },
             });
 
             // In a real app, this would:
@@ -84,7 +106,9 @@ export default function VoiceActivatedSOS() {
         if (isListening) {
             recognition?.stop();
             setIsListening(false);
+            setErrorMessage(null); // Clear error message when stopping
         } else {
+            setErrorMessage(null); // Clear error message before starting
             recognition?.start();
             setIsListening(true);
         }
@@ -112,12 +136,12 @@ export default function VoiceActivatedSOS() {
                 <button
                     onClick={toggleListening}
                     className={`
-            px-4 py-2 rounded-full flex items-center space-x-2
-            ${isListening
+                        px-4 py-2 rounded-full flex items-center space-x-2
+                        ${isListening
                         ? 'bg-red-100 text-red-600 hover:bg-red-200'
                         : 'bg-purple-100 text-purple-600 hover:bg-purple-200'
                     }
-          `}
+                    `}
                 >
                     {isListening ? (
                         <>
@@ -132,6 +156,13 @@ export default function VoiceActivatedSOS() {
                     )}
                 </button>
             </div>
+
+            {errorMessage && (
+                <div className="bg-yellow-50 text-yellow-800 p-4 rounded-lg mb-4 flex items-center space-x-2">
+                    <AlertTriangle className="h-5 w-5" />
+                    <span>{errorMessage}</span>
+                </div>
+            )}
 
             {isActivated && (
                 <div className="bg-red-100 text-red-700 p-4 rounded-lg mb-4 flex items-center space-x-2">

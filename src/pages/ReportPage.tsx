@@ -9,6 +9,7 @@ import {incidentApi} from "../services/incidentApi.ts";
 
 export default function ReportPage() {
   const dispatch = useDispatch();
+  const user = useSelector((state: RootState) => state.user.user);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     type: '',
@@ -27,7 +28,7 @@ export default function ReportPage() {
 
     try {
       const incident = await incidentApi.saveIncident({
-        user: "67b7d41f88cfa607351e0ca3",  // Ensure user is always included
+        user:user?.id,  // Ensure user is always included
         type: formData.type || "Unknown", // Prevent empty fields
         description: formData.description || "No description provided",
         location: formData.location || "Unknown",

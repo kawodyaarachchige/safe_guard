@@ -11,6 +11,7 @@ import { AlertCircle } from 'lucide-react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
 import { userApi } from '../services/userApi.ts';
+import {emergencyApi} from "../services/emergancyApi.ts";
 
 export default function EmergencyButton() {
   const [isActive, setIsActive] = useState(false);
@@ -25,7 +26,7 @@ export default function EmergencyButton() {
 
     setIsActive(true);
     try {
-      await userApi.sendEmergencyAlert({
+      await emergencyApi.sendEmergencyAlert({
         userId: user.id,
         location: currentLocation,
         timestamp: new Date().toISOString(),

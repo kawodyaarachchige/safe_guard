@@ -10,9 +10,9 @@ export default function FakeCaller() {
   const [selectedContact, setSelectedContact] = useState('');
   const [customContact, setCustomContact] = useState({ name: '', number: '' });
   const [delay, setDelay] = useState(0);
-  const [contacts, setContacts] = useState<{ name: string; number: string }[]>([]); // State for fetched contacts
-  const [isLoading, setIsLoading] = useState(false); // Loading state
-  const [error, setError] = useState<string | null>(null); // Error state
+  const [contacts, setContacts] = useState<{ name: string; number: string }[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const ringtoneRef = useRef<HTMLAudioElement>(null);
 
   useEffect(() => {
@@ -33,7 +33,6 @@ export default function FakeCaller() {
 
         setContacts(formattedContacts);
       } catch (err) {
-        setError("Failed to fetch contacts");
         console.error(err);
       } finally {
         setIsLoading(false);

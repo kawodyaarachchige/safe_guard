@@ -11,6 +11,7 @@ export default function ContactManager() {
     const user = useSelector((state: RootState) => state.user.user);
     const [isEditing, setIsEditing] = useState(false);
     const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
+
     const [formData, setFormData] = useState({
         name: '',
         phone: '',
@@ -34,7 +35,7 @@ export default function ContactManager() {
             ...(selectedContact && { _id: selectedContact._id }), // Only include _id for updates
             ...formData,
             lastUpdated: new Date().toISOString(),
-            user: '67b7d41f88cfa607351e0ca3',
+            user: user?.id,
         };
 
         if (selectedContact) {

@@ -23,6 +23,7 @@ export default function LoginForm() {
     try {
       const user = await userApi.login(formData.email, formData.password);
       dispatch(setUser(user)); // Dispatch the user to Redux
+      console.log(`${user.name} logged in successfully...`);
       navigate('/dashboard'); // Navigate to the dashboard
     } catch (err) {
       setError('Invalid email or password'); // Set error message
