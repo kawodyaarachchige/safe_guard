@@ -1,43 +1,47 @@
 import axios from "axios";
-import {Circle} from "@react-google-maps/api";
 
+import Cookies from "js-cookie";
+import {Cycle} from "../store/slices/cycleSlice.ts";
 
 const API_BASE_URL = "http://localhost:5002/api/cycle/";
 
 export const cycleApi = {
-    fetchCycles: async (): Promise<Circle[]> => {
+    fetchCycles: async (): Promise<Cycle[]> => {
         try {
-            const response = await axios.get(`${API_BASE_URL}all`);
+            const response = await axios.get(`${API_BASE_URL}user/${Cookies.get('user_id')}`);
             return response.data;
         } catch (error) {
-            console.error("Error fetching circles:", error);
-            throw new Error("Failed to fetch circles.");
+            console.error("Error fetching cycles:", error);
+            throw new Error("Failed to fetch cycles.");
         }
     },
-    saveCycle: async (circle: Circle): Promise<Circle> => {
+
+    saveCycle: async (cycle: Omit<Cycle, '_id'>): Promise<Cycle> => {
         try {
-            const response = await axios.post(`${API_BASE_URL}save`, circle);
+            const response = await axios.post(`${API_BASE_URL}save`, cycle);
             return response.data;
         } catch (error) {
-            console.error("Error saving circle:", error);
-            throw new Error("Failed to save circle.");
+            console.error("Error saving cycle:", error);
+            throw new Error("Failed to save cycle.");
         }
     },
-    updateCycle: async (circle: Circle): Promise<Circle> => {
+
+    updateCycle: async (cycle: Cycle): Promise<Cycle> => {
         try {
-            const response = await axios.put(`${API_BASE_URL}update/${circle._id}`, circle);
+            const response = await axios.put(`${API_BASE_URL}update/${cycle._id}`, cycle);
             return response.data;
         } catch (error) {
-            console.error("Error updating circle:", error);
-            throw new Error("Failed to update circle.");
+            console.error("Error updating cycle:", error);
+            throw new Error("Failed to update cycle.");
         }
     },
+
     deleteCycle: async (id: string): Promise<void> => {
         try {
             await axios.delete(`${API_BASE_URL}delete/${id}`);
         } catch (error) {
-            console.error("Error deleting circle:", error);
-            throw new Error("Failed to delete circle.");
+            console.error("Error deleting cycle:", error);
+            throw new Error("Failed to delete cycle.");
         }
-    }
+    },
 };

@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Contact } from "../store/slices/contactSlice.ts";
 import Cookies from "js-cookie";
+import AppClient from "../util/AppClient.ts";
 
 const API_BASE_URL = "http://localhost:5002/api/contact/";
 
@@ -17,7 +18,8 @@ export const contactApi = {
 
     saveContact: async (contact: Contact): Promise<Contact> => {
         try {
-            const response = await axios.post(`${API_BASE_URL}save`, contact);
+            const axiosInstance = AppClient.getAxiosInstance();
+            const response = await axiosInstance.post(`${API_BASE_URL}save`, contact);
             return response.data;
         } catch (error) {
             console.error("Error saving contact:", error);
@@ -27,7 +29,8 @@ export const contactApi = {
 
     updateContact: async (contact: Contact): Promise<Contact> => {
         try {
-            const response = await axios.put(`${API_BASE_URL}update/${contact._id}`, contact);
+            const axiosInstance = AppClient.getAxiosInstance();
+            const response = await axiosInstance.put(`${API_BASE_URL}update/${contact._id}`, contact);
             return response.data;
         } catch (error) {
             console.error("Error updating contact:", error);
@@ -37,8 +40,9 @@ export const contactApi = {
 
     deleteContact: async (id: string): Promise<void> => {
         try {
+            const axiosInstance = AppClient.getAxiosInstance();
             console.log('Deleting contact with ID:', id);
-            await axios.delete(`${API_BASE_URL}delete/${id}`);
+            await axiosInstance.delete(`${API_BASE_URL}delete/${id}`);
         } catch (error) {
             console.error("Error deleting contact:", error);
             throw new Error("Failed to delete contact.");

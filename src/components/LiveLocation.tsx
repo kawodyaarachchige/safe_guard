@@ -11,7 +11,6 @@ export default function LiveLocation() {
   const [error, setError] = useState<string>('');
   const [address, setAddress] = useState<string>('');
 
-  // Function to fetch the address using a geocoding API
   const fetchAddress = async (latitude: number, longitude: number) => {
     try {
       const response = await axios.get('https://api.opencagedata.com/geocode/v1/json', {

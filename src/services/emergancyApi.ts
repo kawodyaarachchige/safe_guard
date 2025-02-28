@@ -23,7 +23,7 @@ const API_BASE_URL = 'http://localhost:5002/api/emergency/';
 export const emergencyApi = {
     sendEmergencyAlert: async (data: {
         userId: string;
-        contacts: any[]; // Update this type if you have a specific interface for contacts
+        contacts: any[];
         lastLocation: {
             latitude: number;
             longitude: number;

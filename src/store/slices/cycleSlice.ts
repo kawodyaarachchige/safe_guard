@@ -1,18 +1,13 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 
+import {cycleApi} from "../../services/cycleApi.ts";
 
-interface CycleData {
+export interface Cycle {
+    _id: string;
     startDate: string;
-    endDate: string;
-}
-
-interface Cycle {
-    id: string;
-    startDate: string;
-    endDate: string;
-    cycleLength: number;
-    periodLength: number;
-    symptoms: { date: string; flow: string; symptoms: string[]; notes: string }[];
+    flow: string;
+    symptoms: string[];
+    notes: string;
 }
 
 interface CycleState {
@@ -33,62 +28,55 @@ const initialState: CycleState = {
     error: null,
 };
 
+const isValidDateString = (dateString: string) => {
+    return !isNaN(Date.parse(dateString));
+};
+
+// Fetch Cycles
 export const fetchCycles = createAsyncThunk(
-    'cycle/fetchCycles',
+    "cycle/fetchCycles",
     async (_, { rejectWithValue }) => {
         try {
-
-            const response = await fetch('/api/cycle/save');
-            const data = await response.json();
-            return data;
+            const cycles = await cycleApi.fetchCycles();
+            return cycles;
         } catch (error: any) {
             return rejectWithValue(error.message || 'Failed to fetch cycles');
         }
     }
 );
 
+// Save Cycle
 export const saveCycle = createAsyncThunk(
-    'cycle/saveCircle',
-    async (cycle: CycleData, { rejectWithValue }) => {
+    "cycle/saveCycle",
+    async (cycle: Omit<Cycle, '_id'>, { rejectWithValue }) => {
         try {
-            const response = await fetch('/api/cycle', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(cycle),
-            });
-            const data = await response.json();
-            return data;
+            const savedCycle = await cycleApi.saveCycle(cycle);
+            return savedCycle;
         } catch (error: any) {
             return rejectWithValue(error.message || 'Failed to save cycle');
         }
     }
 );
 
+// Update Cycle
 export const updateCycle = createAsyncThunk(
-    'cycle/updateCycle',
-    async (cycle: CycleData, { rejectWithValue }) => {
+    "cycle/updateCycle",
+    async (cycle: Cycle, { rejectWithValue }) => {
         try {
-            const response = await fetch(`/api/cycle/${cycle.id}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(cycle),
-            });
-            const data = await response.json();
-            return data;
+            const updatedCycle = await cycleApi.updateCycle(cycle);
+            return updatedCycle;
         } catch (error: any) {
             return rejectWithValue(error.message || 'Failed to update cycle');
         }
     }
 );
 
+// Delete Cycle
 export const deleteCycle = createAsyncThunk(
-    'cycle/deleteCycle',
+    "cycle/deleteCycle",
     async (id: string, { rejectWithValue }) => {
         try {
-
-            await fetch(`/api/cycle/${id}`, {
-                method: 'DELETE',
-            });
+            await cycleApi.deleteCycle(id);
             return id;
         } catch (error: any) {
             return rejectWithValue(error.message || 'Failed to delete cycle');
@@ -96,101 +84,118 @@ export const deleteCycle = createAsyncThunk(
     }
 );
 
-
 const cycleSlice = createSlice({
     name: 'cycle',
     initialState,
     reducers: {
-
         calculateAverageCycle: (state) => {
-            if (state.cycles.length > 1) {
-                const totalLength = state.cycles.reduce((sum, cycle, index) => {
-                    if (index === state.cycles.length - 1) return sum;
-                    const currentStart = new Date(cycle.startDate);
-                    const nextStart = new Date(state.cycles[index + 1].startDate);
-                    return sum + Math.floor((nextStart.getTime() - currentStart.getTime()) / (1000 * 60 * 60 * 24));
-                }, 0);
-                state.averageCycleLength = Math.round(totalLength / (state.cycles.length - 1));
-            }
+            calculateAverage(state);
         },
     },
     extraReducers: (builder) => {
         builder
-
+            // Fetch Cycles
             .addCase(fetchCycles.pending, (state) => {
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(fetchCycles.fulfilled, (state, action: PayloadAction<CycleData[]>) => {
+            .addCase(fetchCycles.fulfilled, (state, action: PayloadAction<Cycle[]>) => {
                 state.loading = false;
+                //state.cycles = action.payload.filter(c => isValidDateString(c.startDate));
                 state.cycles = action.payload;
-                // Update lastPeriodDate and nextPeriodDate based on fetched data
-                if (state.cycles.length > 0) {
-                    const lastCycle = state.cycles[state.cycles.length - 1];
-                    state.lastPeriodDate = lastCycle.startDate;
-                    const nextDate = new Date(lastCycle.startDate);
-                    nextDate.setDate(nextDate.getDate() + state.averageCycleLength);
-                    state.nextPeriodDate = nextDate.toISOString();
-                }
+                updateCycleDates(state);
             })
             .addCase(fetchCycles.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload as string;
             })
 
-
+            // Save Cycle
             .addCase(saveCycle.pending, (state) => {
+                state.loading = true;
                 state.error = null;
             })
-            .addCase(saveCycle.fulfilled, (state, action: PayloadAction<CycleData>) => {
+            .addCase(saveCycle.fulfilled, (state, action: PayloadAction<Cycle>) => {
+                state.loading = false;
                 state.cycles.push(action.payload);
-                // Update lastPeriodDate and nextPeriodDate
-                state.lastPeriodDate = action.payload.startDate;
-                const nextDate = new Date(action.payload.startDate);
-                nextDate.setDate(nextDate.getDate() + state.averageCycleLength);
-                state.nextPeriodDate = nextDate.toISOString();
+                updateCycleDates(state);
+                calculateAverage(state);
             })
             .addCase(saveCycle.rejected, (state, action) => {
+                state.loading = false;
                 state.error = action.payload as string;
             })
 
-
+            // Update Cycle
             .addCase(updateCycle.pending, (state) => {
+                state.loading = true;
                 state.error = null;
             })
-            .addCase(updateCycle.fulfilled, (state, action: PayloadAction<CycleData>) => {
-                const index = state.cycles.findIndex(cycle => cycle.id === action.payload.id);
+            .addCase(updateCycle.fulfilled, (state, action: PayloadAction<Cycle>) => {
+                state.loading = false;
+                const index = state.cycles.findIndex(c => c._id === action.payload._id);
                 if (index !== -1) {
                     state.cycles[index] = action.payload;
                 }
+                updateCycleDates(state);
+                calculateAverage(state);
             })
             .addCase(updateCycle.rejected, (state, action) => {
+                state.loading = false;
                 state.error = action.payload as string;
             })
 
+            // Delete Cycle
             .addCase(deleteCycle.pending, (state) => {
+                state.loading = true;
                 state.error = null;
             })
             .addCase(deleteCycle.fulfilled, (state, action: PayloadAction<string>) => {
-                state.cycles = state.cycles.filter(cycle => cycle.id !== action.payload);
-
-                if (state.cycles.length > 0) {
-                    const lastCycle = state.cycles[state.cycles.length - 1];
-                    state.lastPeriodDate = lastCycle.startDate;
-                    const nextDate = new Date(lastCycle.startDate);
-                    nextDate.setDate(nextDate.getDate() + state.averageCycleLength);
-                    state.nextPeriodDate = nextDate.toISOString();
-                } else {
-                    state.lastPeriodDate = null;
-                    state.nextPeriodDate = null;
-                }
+                state.loading = false;
+                state.cycles = state.cycles.filter(c => c._id !== action.payload);
+                updateCycleDates(state);
+                calculateAverage(state);
             })
             .addCase(deleteCycle.rejected, (state, action) => {
+                state.loading = false;
                 state.error = action.payload as string;
             });
     },
 });
 
+const calculateAverage = (state: CycleState) => {
+    if (state.cycles.length > 1) {
+        const totalDays = state.cycles
+            .slice(0, -1)
+            .reduce((acc, cycle, index) => {
+                const nextCycle = state.cycles[index + 1];
+                const diff = new Date(nextCycle.startDate).getTime() - new Date(cycle.startDate).getTime();
+                return acc + Math.floor(diff / (1000 * 60 * 60 * 24));
+            }, 0);
+
+        state.averageCycleLength = Math.round(totalDays / (state.cycles.length - 1));
+    }
+};
+
+const updateCycleDates = (state: CycleState) => {
+    //const validCycles = state.cycles.filter(c => isValidDateString(c.startDate));
+    const validCycles = state.cycles;
+    if (validCycles.length >= 0) {
+        const lastCycle = validCycles[validCycles.length - 1];
+        state.lastPeriodDate = lastCycle.startDate;
+        state.nextPeriodDate = calculateNextPeriodDate(lastCycle.startDate, state.averageCycleLength);
+    } else {
+        state.lastPeriodDate = null;
+        state.nextPeriodDate = null;
+    }
+};
+
+const calculateNextPeriodDate = (lastDate: string, averageLength: number): string | null => {
+    if (!isValidDateString(lastDate)) return null;
+    const date = new Date(lastDate);
+    date.setDate(date.getDate() + averageLength);
+    return date.toISOString();
+};
 
 export const { calculateAverageCycle } = cycleSlice.actions;
 export default cycleSlice.reducer;

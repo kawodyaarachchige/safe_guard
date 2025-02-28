@@ -17,6 +17,8 @@ export const userApi = {
             Cookies.set('user_id',user.id,{expires: 7,secure: true, sameSite: 'Strict'});
             Cookies.set('user_name',user.name,{expires: 7,secure: true, sameSite: 'Strict'});
             Cookies.set('user_email',user.email,{expires: 7,secure: true, sameSite: 'Strict'});
+            Cookies.set('access_token',user.accessToken,{expires: 7,secure: true, sameSite: 'Strict'});
+            Cookies.set('refresh_token',user.refreshToken,{expires: 7,secure: true, sameSite: 'Strict'});
 
             return user;
         }catch (error) {

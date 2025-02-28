@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Calendar, Clock, Activity, FileText } from 'lucide-react';
+import { Calendar, Clock, Activity } from 'lucide-react';
 import { RootState } from '../store/store';
-import { saveCycle, updateCycle, deleteCycle, calculateAverageCycle, CycleDay } from '../store/slices/cycleSlice';
+import { saveCycle, updateCycle, deleteCycle, calculateAverageCycle, fetchCycles } from '../store/slices/cycleSlice';
+import axios from 'axios';
 
 export default function PeriodTracker() {
     const dispatch = useDispatch();
@@ -29,11 +30,39 @@ export default function PeriodTracker() {
         'Breast Tenderness',
     ];
 
-    const handleAddCycle = (e: React.FormEvent) => {
+    // Fetch cycles on component mount
+    useEffect(() => {
+        dispatch(fetchCycles());
+    }, [dispatch]);
+
+    // Validate date string
+    const isValidDate = (dateString: string) => {
+        const date = new Date(dateString);
+        return !isNaN(date.getTime());
+    };
+
+    // Format date for display
+    const formatDate = (dateString: string | null) => {
+        if (!dateString || !isValidDate(dateString)) return 'Not available';
+
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+        });
+    };
+
+    const handleAddCycle = async (e: React.FormEvent) => {
         e.preventDefault();
 
+        // Validate start date
+        if (!isValidDate(newCycle.startDate)) {
+            alert('Please select a valid start date');
+            return;
+        }
+
         const cycleData = {
-            id: Date.now().toString(),
             startDate: newCycle.startDate,
             endDate: null,
             cycleLength: averageCycleLength,
@@ -46,12 +75,17 @@ export default function PeriodTracker() {
             }],
         };
 
-        dispatch(saveCycle(cycleData));
-        dispatch(calculateAverageCycle());
-        resetForm();
+        try {
+            const response = await axios.post('/api/cycle', cycleData);
+            dispatch(saveCycle(response.data));
+            dispatch(calculateAverageCycle());
+            resetForm();
+        } catch (error) {
+            console.error('Failed to save cycle:', error);
+        }
     };
 
-    const handleUpdateCycle = (e: React.FormEvent) => {
+    const handleUpdateCycle = async (e: React.FormEvent) => {
         e.preventDefault();
 
         if (editingCycleId) {
@@ -66,15 +100,25 @@ export default function PeriodTracker() {
                 }],
             };
 
-            dispatch(updateCycle(updatedCycleData));
-            dispatch(calculateAverageCycle());
-            resetForm();
+            try {
+                const response = await axios.put(`/api/cycle/${editingCycleId}`, updatedCycleData);
+                dispatch(updateCycle(response.data));
+                dispatch(calculateAverageCycle());
+                resetForm();
+            } catch (error) {
+                console.error('Failed to update cycle:', error);
+            }
         }
     };
 
-    const handleDeleteCycle = (id: string) => {
-        dispatch(deleteCycle(id));
-        dispatch(calculateAverageCycle());
+    const handleDeleteCycle = async (id: string) => {
+        try {
+            await axios.delete(`/api/cycle/${id}`);
+            dispatch(deleteCycle(id));
+            dispatch(calculateAverageCycle());
+        } catch (error) {
+            console.error('Failed to delete cycle:', error);
+        }
     };
 
     const handleSymptomToggle = (symptom: string) => {
@@ -94,15 +138,6 @@ export default function PeriodTracker() {
             flow: 'medium',
             symptoms: [],
             notes: '',
-        });
-    };
-
-    const formatDate = (dateString: string | null) => {
-        if (!dateString) return 'Not available';
-        return new Date(dateString).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
         });
     };
 
@@ -133,6 +168,8 @@ export default function PeriodTracker() {
                             value={newCycle.startDate}
                             onChange={(e) => setNewCycle({ ...newCycle, startDate: e.target.value })}
                             className="w-full rounded-md border-gray-300 shadow-sm focus:border-pink-500 focus:ring-pink-500"
+                            min="2010-01-01"
+                            max={new Date().toISOString().split('T')[0]}
                         />
                     </div>
 
@@ -220,7 +257,7 @@ export default function PeriodTracker() {
                         </div>
                         <div className="space-y-3">
                             {cycles.slice(-3).reverse().map((cycle) => (
-                                <div key={cycle.id} className="bg-white p-3 rounded-md shadow-sm">
+                                <div key={cycle._id} className="bg-white p-3 rounded-md shadow-sm">
                                     <p className="text-sm font-medium">
                                         Started: {formatDate(cycle.startDate)}
                                     </p>
@@ -239,7 +276,7 @@ export default function PeriodTracker() {
                                     <div className="mt-2 flex space-x-2">
                                         <button
                                             onClick={() => {
-                                                setEditingCycleId(cycle.id);
+                                                setEditingCycleId(cycle._id);
                                                 setNewCycle({
                                                     startDate: cycle.startDate,
                                                     flow: cycle.symptoms[0].flow,
@@ -253,7 +290,7 @@ export default function PeriodTracker() {
                                             Edit
                                         </button>
                                         <button
-                                            onClick={() => handleDeleteCycle(cycle.id)}
+                                            onClick={() => handleDeleteCycle(cycle._id)}
                                             className="px-4 py-1 text-xs text-white bg-red-500 rounded-full"
                                         >
                                             Delete

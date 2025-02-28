@@ -105,96 +105,102 @@ export default function IncidentNotifications() {
             </div>
 
             <div className="space-y-4">
-                {incidents.map((incident) => (
-                    <div
-                        key={incident._id} // Ensure this key is unique
-                        className={`group rounded-xl p-4 transition-all duration-200 ${
-                            isUpdating && editingIncidentId === incident._id
-                                ? 'opacity-70'
-                                : 'opacity-100'
-                        }`}
-                    >
-                        {/* Render incident details */}
-                        <div className="flex items-start justify-between">
-                            <div className="flex-1">
-                                <div className="flex items-center space-x-2 mb-2">
-                        <span
-                            className={`px-3 py-1 rounded-full text-sm font-medium ${getIncidentColor(incident.type)}`}>
-                            {incident.type}
-                        </span>
-                                    <span className="text-gray-500 text-sm flex items-center">
-                            <Clock className="h-4 w-4 mr-1"/>
-                                        {formatTimestamp(incident.timestamp)}
-                        </span>
-                                </div>
+                {incidents.map((incident, index) => {
+                    if (!incident._id) {
+                        console.warn("Missing _id for incident:", incident);
+                    }
+                    return (
+                        <div
+                            key={incident._id || `incident-${index}`} // Fallback key if _id is missing
+                            className={`group rounded-xl p-4 transition-all duration-200 ${
+                                isUpdating && editingIncidentId === incident._id
+                                    ? 'opacity-70'
+                                    : 'opacity-100'
+                            }`}
+                        >
+                            {/* Render incident details */}
+                            <div className="flex items-start justify-between">
+                                <div className="flex-1">
+                                    <div className="flex items-center space-x-2 mb-2">
+                            <span
+                                className={`px-3 py-1 rounded-full text-sm font-medium ${getIncidentColor(incident.type)}`}>
+                                {incident.type}
+                            </span>
+                                        <span className="text-gray-500 text-sm flex items-center">
+                                <Clock className="h-4 w-4 mr-1"/>
+                                            {formatTimestamp(incident.timestamp)}
+                            </span>
+                                    </div>
 
-                                {editingIncidentId === incident._id ? (
-                                    <input
-                                        type="text"
-                                        value={editedIncident?.description || ""}
-                                        onChange={(e) => handleChange(e, "description")}
-                                        className="border rounded-lg p-2 w-full mb-2"
-                                        disabled={isUpdating}
-                                    />
-                                ) : (
-                                    <p className="text-gray-700 mb-2">{incident.description}</p>
-                                )}
-
-                                <div className="flex items-center text-gray-500 text-sm">
-                                    <MapPin className="h-4 w-4 mr-1"/>
                                     {editingIncidentId === incident._id ? (
                                         <input
                                             type="text"
-                                            value={editedIncident?.location || ""}
-                                            onChange={(e) => handleChange(e, "location")}
-                                            className="border rounded-lg p-2 w-full"
+                                            value={editedIncident?.description || ""}
+                                            onChange={(e) => handleChange(e, "description")}
+                                            className="border rounded-lg p-2 w-full mb-2"
                                             disabled={isUpdating}
                                         />
                                     ) : (
-                                        <span>{incident.location}</span>
+                                        <p className="text-gray-700 mb-2">{incident.description}</p>
+                                    )}
+
+                                    <div className="flex items-center text-gray-500 text-sm">
+                                        <MapPin className="h-4 w-4 mr-1"/>
+                                        {editingIncidentId === incident._id ? (
+                                            <input
+                                                type="text"
+                                                value={editedIncident?.location || ""}
+                                                onChange={(e) => handleChange(e, "location")}
+                                                className="border rounded-lg p-2 w-full"
+                                                disabled={isUpdating}
+                                            />
+                                        ) : (
+                                            <span>{incident.location}</span>
+                                        )}
+                                    </div>
+                                </div>
+
+                                <div className="flex items-center space-x-2">
+                                    {editingIncidentId === incident._id ? (
+                                        <>
+                                            <button
+                                                onClick={() => handleSave(incident)}
+                                                className="text-green-600 hover:text-green-800 transition-colors p-1"
+                                                disabled={isUpdating}
+                                            >
+                                                <Check className="h-5 w-5"/>
+                                            </button>
+                                            <button
+                                                onClick={handleCancel}
+                                                className="text-gray-400 hover:text-red-600 transition-colors p-1"
+                                                disabled={isUpdating}
+                                            >
+                                                <X className="h-5 w-5"/>
+                                            </button>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <button
+                                                onClick={() => handleEdit(incident)}
+                                                className="text-gray-400 hover:text-blue-600 transition-colors p-1"
+                                            >
+                                                <Edit className="h-5 w-5"/>
+                                            </button>
+                                            <button
+                                                onClick={() => handleDelete(incident._id)}
+                                                className="text-gray-400 hover:text-red-600 transition-colors p-1"
+                                            >
+                                                <Trash className="h-5 w-5"/>
+                                            </button>
+                                        </>
                                     )}
                                 </div>
                             </div>
-
-                            <div className="flex items-center space-x-2">
-                                {editingIncidentId === incident._id ? (
-                                    <>
-                                        <button
-                                            onClick={() => handleSave(incident)}
-                                            className="text-green-600 hover:text-green-800 transition-colors p-1"
-                                            disabled={isUpdating}
-                                        >
-                                            <Check className="h-5 w-5"/>
-                                        </button>
-                                        <button
-                                            onClick={handleCancel}
-                                            className="text-gray-400 hover:text-red-600 transition-colors p-1"
-                                            disabled={isUpdating}
-                                        >
-                                            <X className="h-5 w-5"/>
-                                        </button>
-                                    </>
-                                ) : (
-                                    <>
-                                        <button
-                                            onClick={() => handleEdit(incident)}
-                                            className="text-gray-400 hover:text-blue-600 transition-colors p-1"
-                                        >
-                                            <Edit className="h-5 w-5"/>
-                                        </button>
-                                        <button
-                                            onClick={() => handleDelete(incident._id)}
-                                            className="text-gray-400 hover:text-red-600 transition-colors p-1"
-                                        >
-                                            <Trash className="h-5 w-5"/>
-                                        </button>
-                                    </>
-                                )}
-                            </div>
                         </div>
-                    </div>
-                ))}
+                    );
+                })}
             </div>
+
         </div>
     );
 }
