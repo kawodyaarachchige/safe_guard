@@ -1,7 +1,8 @@
 import axios from "axios";
+import AppClient from "../util/AppClient.ts";
 
 
-const API_BASE_URL = 'http://localhost:5002/api/emergency/';
+const API_BASE_URL = 'https://safeguard-5cfr.onrender.com/emergency/';
 
 /*export const emergencyApi = {
     sendEmergencyAlert: async (data: {
@@ -34,7 +35,8 @@ export const emergencyApi = {
         };
     }) => {
         try {
-            const response = await axios.post(`${API_BASE_URL}/save`, data);
+            const axiosInstance = AppClient.getAxiosInstance();
+            const response = await axiosInstance.post(`${API_BASE_URL}/save`, data);
             return response.data;
         } catch (error) {
             console.error('Error sending emergency alert:', error);

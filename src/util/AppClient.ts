@@ -1,7 +1,7 @@
 import axios, { AxiosInstance, AxiosResponse, AxiosError } from "axios";
 import Cookies from "js-cookie";
 
-const BASE_URL = 'http://127.0.0.1:5002/api';
+const BASE_URL = 'https://safeguard-5cfr.onrender.com/api';
 
 class ApiClient {
     private static instance: AxiosInstance;

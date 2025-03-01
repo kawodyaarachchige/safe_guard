@@ -1,22 +1,21 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import {LogOut, Heart, Cookie} from 'lucide-react';
+import {LogOut, Heart, Menu, X} from 'lucide-react';
 import { RootState } from '../store/store';
 import {clearUser, setUser} from '../store/slices/userSlice';
 import Cookies from "js-cookie";
-import {all} from "axios";
 
 export default function Header() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { user } = useSelector((state: RootState) => state.user);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
     if (!user) {
       const userId = Cookies.get('user_id')
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-      userId? dispatch(setUser(userId)) : navigate('/');
+      userId ? dispatch(setUser(userId)) : navigate('/');
     }
   }, []);
 
@@ -47,9 +46,12 @@ export default function Header() {
               <Link to="/" className="text-gray-600 hover:text-purple-600 transition-colors">Home</Link>
               {user ? (
                   <>
-                    <Link to="/dashboard" className="text-gray-600 hover:text-purple-600 transition-colors">Dashboard</Link>
-                    <Link to="/location" className="text-gray-600 hover:text-purple-600 transition-colors">Location</Link>
-                    <Link to="/period-details" className="text-gray-600 hover:text-purple-600 transition-colors">Period Details</Link>
+                    <Link to="/dashboard"
+                          className="text-gray-600 hover:text-purple-600 transition-colors">Dashboard</Link>
+                    <Link to="/location"
+                          className="text-gray-600 hover:text-purple-600 transition-colors">Location</Link>
+                    {/*<Link to="/period-details" className="text-gray-600 hover:text-purple-600 transition-colors">Period*/}
+                    {/*  Details</Link>*/}
                     <Link to="/report" className="text-gray-600 hover:text-purple-600 transition-colors">Report</Link>
                     <Link to="/contacts" className="text-gray-700 hover:text-purple-500">Phone Book</Link>
                   </>
@@ -71,8 +73,7 @@ export default function Header() {
                     onClick={handleLogout}
                     className="flex items-center space-x-2 text-gray-600 hover:text-purple-600 transition-colors"
                 >
-                  <LogOut className="h-5 w-5" />
-                  <span>Logout</span>
+                  <span className="text-pink-600">Logout</span>
                 </button>
             )}
           </div>

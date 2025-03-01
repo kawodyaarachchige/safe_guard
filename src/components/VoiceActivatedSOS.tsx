@@ -74,7 +74,7 @@ export default function VoiceActivatedSOS() {
         try {
             await emergencyApi.sendEmergencyAlert({
                 userId: user.id,
-                contacts: [], // Add contacts if needed
+                contacts: [],
                 lastLocation: {
                     latitude: currentLocation.latitude,
                     longitude: currentLocation.longitude,
@@ -84,12 +84,6 @@ export default function VoiceActivatedSOS() {
                     recording: false,
                 },
             });
-
-            // In a real app, this would:
-            // 1. Send alerts to emergency contacts
-            // 2. Contact local emergency services
-            // 3. Start recording audio/video
-            // 4. Share live location
 
             setTimeout(() => {
                 alert('Emergency services and trusted contacts have been notified.');
@@ -105,9 +99,9 @@ export default function VoiceActivatedSOS() {
         if (isListening) {
             recognition?.stop();
             setIsListening(false);
-            setErrorMessage(null); // Clear error message when stopping
+            setErrorMessage(null);
         } else {
-            setErrorMessage(null); // Clear error message before starting
+            setErrorMessage(null);
             recognition?.start();
             setIsListening(true);
         }
