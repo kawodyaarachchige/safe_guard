@@ -15,7 +15,7 @@ export interface Contact {
 interface ContactState {
     contacts: Contact[];
     loading: boolean;
-    updating: {[key: string]: boolean}; // Track updates per contact
+    updating: {[key: string]: boolean};
     error: string | null;
     selectedContact: Contact | null;
 }
@@ -100,17 +100,14 @@ const contactSlice = createSlice({
         optimisticUpdateContact: (state, action: PayloadAction<Contact>) => {
             const index = state.contacts.findIndex(contact => contact._id === action.payload._id);
             if (index !== -1) {
-                // Keep the existing contact in case we need to rollback
                 const oldContact = state.contacts[index];
-                // Update with new data
                 state.contacts[index] = action.payload;
-                return oldContact; // Return for potential rollback
+                return oldContact;
             }
         }
     },
     extraReducers: (builder) => {
         builder
-            // Fetch Contacts
             .addCase(fetchContacts.pending, (state) => {
                 state.loading = true;
                 state.error = null;
@@ -124,7 +121,6 @@ const contactSlice = createSlice({
                 state.error = action.payload as string;
             })
 
-            // Save Contact
             .addCase(saveContact.pending, (state) => {
                 state.error = null;
             })
@@ -135,9 +131,7 @@ const contactSlice = createSlice({
                 state.error = action.payload as string;
             })
 
-            // Update Contact
             .addCase(updateContact.pending, (state, action) => {
-                // Set updating flag for specific contact
                 state.updating[action.meta.arg._id] = true;
                 state.error = null;
             })
@@ -146,30 +140,25 @@ const contactSlice = createSlice({
                 if (index !== -1) {
                     state.contacts[index] = action.payload;
                 }
-                // Clear updating flag
                 delete state.updating[action.payload._id];
             })
             .addCase(updateContact.rejected, (state, action) => {
-                // Clear updating flag on error
                 if (action.meta?.arg?._id) {
                     delete state.updating[action.meta.arg._id];
                 }
                 state.error = action.payload as string;
             })
 
-            // Delete Contact
+
             .addCase(deleteContact.pending, (state, action) => {
-                // Set updating flag for specific contact
                 state.updating[action.meta.arg] = true;
                 state.error = null;
             })
             .addCase(deleteContact.fulfilled, (state, action) => {
                 state.contacts = state.contacts.filter(contact => contact._id !== action.payload);
-                // Clear updating flag
                 delete state.updating[action.payload];
             })
             .addCase(deleteContact.rejected, (state, action) => {
-                // Clear updating flag on error
                 if (action.meta?.arg) {
                     delete state.updating[action.meta.arg];
                 }

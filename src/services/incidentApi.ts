@@ -3,8 +3,8 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import AppClient from "../util/AppClient.ts";
 
-const API_BASE_URL = 'https://safeguard-5cfr.onrender.com/api/incident/';
-
+ // const API_BASE_URL = 'https://safeguard-5cfr.onrender.com/api/incident/';
+const API_BASE_URL = 'http://localhost:5002/api/incident/';
 
 export const incidentApi = {
     saveIncident: async (data: Partial<Incident>): Promise<Incident> => {

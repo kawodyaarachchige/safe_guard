@@ -3,7 +3,8 @@ import { Contact } from "../store/slices/contactSlice.ts";
 import Cookies from "js-cookie";
 import AppClient from "../util/AppClient.ts";
 
-const API_BASE_URL = "https://safeguard-5cfr.onrender.com/api/contact/";
+// const API_BASE_URL = "https://safeguard-5cfr.onrender.com/api/contact/";
+ const API_BASE_URL = "http://localhost:5002/api/contact/";
 
 export const contactApi = {
     fetchContacts: async (): Promise<Contact[]> => {

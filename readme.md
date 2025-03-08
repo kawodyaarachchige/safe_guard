@@ -34,6 +34,27 @@ The **Women Safety Application** is a platform designed to enhance safety for wo
 - Token-based authentication with **JWT**
 - Secure API requests with **CORS**
 
+## 📸 Screenshots
+![Women Safety](https://imgur.com/150FyAA.jpg)
+-
+![Women Safety](https://imgur.com/1t9N93U.jpg)
+-
+![Women Safety](https://imgur.com/bRPNOjD.jpg)
+-
+![Women Safety](https://imgur.com/chq189N.jpg)
+-
+![Women Safety](https://imgur.com/dggVE01.jpg)
+-
+![Women Safety](https://imgur.com/JbekjTf.jpg)
+-
+![Women Safety](https://imgur.com/QH7QjPM.jpg)
+-
+![Women Safety](https://imgur.com/OrQ4Kco.jpg)
+-
+![Women Safety](https://imgur.com/MI0sPb2.jpg)
+-
+![Women Safety](https://imgur.com/rXwJdi4.jpg)
+
 ## 📜 License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
