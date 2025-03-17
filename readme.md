@@ -1,4 +1,6 @@
-# Women Safety Application
+<h1 align="center">
+    <img src="https://readme-typing-svg.herokuapp.com/?font=Righteous&size=35&center=true&vCenter=true&width=700&height=70&duration=4000&lines=Safe+Guard+Women+Safety+App&color=800080" />
+</h1>
 
 ![Women Safety](https://img.shields.io/badge/Women_Safety-React-blueviolet)
 ![Express.js](https://img.shields.io/badge/Backend-Express.js-green)
@@ -14,7 +16,6 @@ The **Women Safety Application** is a platform designed to enhance safety for wo
 - **Database:** MongoDB
 - **Authentication:** JWT (JSON Web Token)
 - **Geolocation:** Google Maps API / OpenStreetMap
-- **Notifications:** Twilio / Firebase
 
 ## ✨ Features
 - 📍 **Live Location Sharing** – Share real-time location with trusted contacts
@@ -54,6 +55,12 @@ The **Women Safety Application** is a platform designed to enhance safety for wo
 ![Women Safety](https://imgur.com/MI0sPb2.jpg)
 -
 ![Women Safety](https://imgur.com/rXwJdi4.jpg)
+
+
+## 🖥️ Backend Repository
+
+The backend code for the  System is available in a separate repository. You can find it [here](https://github.com/kawodyaarachchige/safe-guard-server-side.git)
+
 
 ## 📜 License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
