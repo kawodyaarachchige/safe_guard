@@ -1,7 +1,7 @@
 import Cookies from 'js-cookie';
 
- //const API_BASE_URL = 'https://safeguard-5cfr.onrender.com/api/user/';
-const API_BASE_URL = 'http://localhost:5002/api/user/';
+ const API_BASE_URL = 'https://safeguard-5cfr.onrender.com/api/user/';
+// const API_BASE_URL = 'http://localhost:5002/api/user/';
 export const userApi = {
     login: async (email: string, password: string): Promise<User> => {
         const response = await fetch(`${API_BASE_URL}login`, {
